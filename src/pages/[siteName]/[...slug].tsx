@@ -1,9 +1,7 @@
 import { GetServerSidePropsContext, NextPage } from "next";
-import { useRouter } from "next/router";
 import useSWR from "swr";
 import { getByPath } from "../../../lib/posts";
 import { fetcher } from "../../../lib/utils";
-
 
 const Image = ({ id }) => {
   const { data, error } = useSWR(
@@ -19,7 +17,14 @@ const Paragraph = ({ value }) => {
   return <div dangerouslySetInnerHTML={{ __html: value }}></div>;
 };
 
-const Page: NextPage = ({ page, siteName }) => {
+const Page: NextPage = ({ page, siteName, err }) => {
+  if (err) {
+    return (
+      <>
+        <div>{err}</div>
+      </>
+    );
+  }
   let components = [];
   for (const block of page.body) {
     // switch (block.type) {
@@ -28,7 +33,9 @@ const Page: NextPage = ({ page, siteName }) => {
     if (block.type === "heading") {
       components.push(<p key={block.id}>{block.value}</p>);
     } else if (block.type === "paragraph") {
-      components.push(<Paragraph key={block.id} value={block.value}></Paragraph>);
+      components.push(
+        <Paragraph key={block.id} value={block.value}></Paragraph>
+      );
     } else if (block.type === "image") {
       components.push(<Image key={block.id} id={block.value}></Image>);
     }
@@ -51,7 +58,15 @@ export async function getServerSideProps({
   if (!params.siteName.startsWith("@")) return { notFound: true };
   const slugArray = params.slug;
   let path = slugArray.join("/");
-  let page = await getByPath(path);
+  let page;
+  try {
+    page = await getByPath(path);
+  } catch (err) {
+    let err_message = err.message;
+    return {
+      props: { err: `getting data byPath, ${err_message}` }, // will be passed to the page component as props
+    };
+  }
   if (page.status_code === 404) return { notFound: true };
   return {
     props: { page: page, siteName: params.siteName }, // will be passed to the page component as props
