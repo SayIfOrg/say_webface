@@ -4,34 +4,34 @@ export async function getByPath(path: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       query: `
-							query {
-									page(urlPath: "${path}") {
-									... on SimplePage {
-											body {
-											... on RichTextBlock {
-													id
-													blockType
-													value
-											}
-											... on CharBlock {
-													id
-													blockType
-													value
-											}
-											...on ImageChooserBlock {
-													id
-													blockType
-													image {
-														rendition(fill: "500x400") {
-															url
-														}
-												}
-											}
-										}
+			query {
+				page(urlPath: "${path}") {
+					... on SimplePage {
+						body {
+							... on RichTextBlock {
+								id
+								blockType
+								value
+							}
+							... on CharBlock {
+								id
+								blockType
+								value
+							}
+							...on ImageChooserBlock {
+								id
+								blockType
+								image {
+									rendition(fill: "500x400") {
+										url
 									}
 								}
 							}
-							`,
+						}
+					}
+				}
+			}
+			`,
     }),
   });
   let json = await response.json();
