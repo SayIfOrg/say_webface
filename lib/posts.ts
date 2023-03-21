@@ -6,6 +6,7 @@ export async function getByPath(path: string) {
       query: `
 			query {
 				page(urlPath: "${path}") {
+					title
 					... on SimplePage {
 						body {
 							... on RichTextBlock {
