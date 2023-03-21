@@ -1,7 +1,14 @@
 import { GetServerSidePropsContext, NextPage } from "next";
 import { getByPath } from "../../../lib/posts";
 
-const HomePage: NextPage = ({ page, siteName, err, errors }) => {
+interface Probs {
+  page: HomePage;
+  siteName: string;
+  err: string;
+  errors: any;
+}
+
+const HomePage = ({ page, siteName, err, errors }: Probs) => {
   if (err) {
     return (
       <>
@@ -22,24 +29,29 @@ const HomePage: NextPage = ({ page, siteName, err, errors }) => {
   );
 };
 
+interface HomePage {
+  title: string;
+}
+
 export async function getServerSideProps({
   params,
-}: GetServerSidePropsContext) {
+}: GetServerSidePropsContext<{ siteName: string }>) {
+  if (!params) return { notFound: true };
   if (!params.siteName.startsWith("@")) return { notFound: true };
   let page;
   let errors;
   try {
     let data = await getByPath("/");
-    page = data.page;
-    errors = page.errors || null;
-  } catch (err) {
+    page = data.page as HomePage;
+    errors = data.errors || null;
+  } catch (err: any) {
     let err_message = err.message;
     return {
-      props: { err: `getting data byPath, ${err_message}` }, // will be passed to the page component as props
+      props: { err: `getting data byPath, ${err_message}` },
     };
   }
   return {
-    props: { page: page, siteName: params.siteName, errors: errors }, // will be passed to the page component as props
+    props: { page: page, siteName: params.siteName, errors: errors },
   };
 }
 
