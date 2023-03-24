@@ -1,3 +1,20 @@
+export interface Page {
+  id?: string;
+  title?: string;
+  slug?: string;
+  url?: string;
+  seoTitle?: string;
+  body?: any;
+}
+
+export interface HomePage {
+  title: string;
+}
+
+export interface GraphqlError {
+  message: string;
+}
+
 export async function getByPath(path: string) {
   let response = await fetch("http://127.0.0.1:8000/graphql/", {
     method: "POST",
@@ -36,7 +53,10 @@ export async function getByPath(path: string) {
     }),
   });
   let json = await response.json();
-  return { page: json.data.page, errors: json.errors };
+  return { page: json.data.page, errors: json.errors || [] } as {
+    page: Page;
+    errors: GraphqlError[];
+  };
 }
 
 const pageTypeMapping = {
@@ -44,28 +64,31 @@ const pageTypeMapping = {
   home: ["home.HomePage"],
 };
 
-export async function getPagesByType(type: str) {
+export async function getPagesByType(type: keyof typeof pageTypeMapping) {
   const typeQuery = pageTypeMapping[type].join(",");
   let response = await fetch("http://127.0.0.1:8000/graphql/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       query: `
-							query {
-									pages(contentType: "${typeQuery}") {
-										id
-										title
-										url
-									}
-							}
-							`,
+			query {
+				pages(contentType: "${typeQuery}") {
+					id
+					title
+					url
+				}
+			}
+			`,
     }),
   });
   let json = await response.json();
-  return { pages: json.data.pages, errors: json.errors };
+  return { pages: json.data.pages, errors: json.errors } as {
+    pages: Page[];
+    errors: GraphqlError[];
+  };
 }
 
-export async function getRendition(args) {
+export async function getRendition(args: { imageId: number; fill: string }) {
   let imageId = args.imageId;
   let fill = args.fill;
   let response = await fetch("http://127.0.0.1:8000/graphql/", {

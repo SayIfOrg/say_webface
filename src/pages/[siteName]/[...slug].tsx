@@ -1,9 +1,17 @@
-import { GetServerSidePropsContext, NextPage } from "next";
+import { GetServerSidePropsContext } from "next";
 import useSWR from "swr";
-import { getByPath, getRendition } from "../../../lib/posts";
-import { fetcher } from "../../../lib/utils";
+import {
+  getByPath,
+  getRendition,
+  GraphqlError,
+  Page,
+} from "../../../lib/posts";
 
-const Image = ({ id, url }) => {
+type ImageProbs =
+  | { id: number; url?: undefined }
+  | { url: string; id?: undefined };
+
+const Image = ({ id, url }: ImageProbs) => {
   let errors;
   if (!url) {
     const { data, error } = useSWR(
@@ -24,18 +32,21 @@ const Image = ({ id, url }) => {
   );
 };
 
-const Paragraph = ({ value }) => {
+interface ParagraphProbs {
+  value: string;
+}
+
+const Paragraph = ({ value }: ParagraphProbs) => {
   return <div dangerouslySetInnerHTML={{ __html: value }}></div>;
 };
 
-const Page: NextPage = ({ page, siteName, err, errors }) => {
-  if (err) {
-    return (
-      <>
-        <div>{err}</div>
-      </>
-    );
-  }
+interface Probs {
+  page: Page;
+  siteName: string;
+  errors: GraphqlError[];
+}
+
+const Page = ({ page, siteName, errors }: Probs) => {
   let components = [];
   for (const block of page.body) {
     // switch (block.type) {
@@ -57,7 +68,11 @@ const Page: NextPage = ({ page, siteName, err, errors }) => {
     <>
       <div className="grid grid-cols-4 justify-items-center ">
         <div className="col-start-2 col-end-4">
-          <p>{errors}</p>
+          <p>
+            {errors.map((err) => (
+              <p key={err.message}>{err.message}</p>
+            ))}
+          </p>
           <p>{siteName}</p>
           <div>{components}</div>
         </div>
@@ -68,25 +83,25 @@ const Page: NextPage = ({ page, siteName, err, errors }) => {
 
 export async function getServerSideProps({
   params,
-}: GetServerSidePropsContext) {
+}: GetServerSidePropsContext<{ siteName: string; slug: string[] }>) {
+  if (!params) return { notFound: true };
   if (!params.siteName.startsWith("@")) return { notFound: true };
-  const slugArray = params.slug;
-  let path = slugArray.join("/");
+  let path = params.slug.join("/");
   let page;
   let errors;
   try {
     let data = await getByPath(path);
     page = data.page;
-    errors = data.errors || null;
-  } catch (err) {
+    errors = data.errors;
+  } catch (err: any) {
     let err_message = err.message;
     return {
-      props: { err: `getting data byPath, ${err_message}` }, // will be passed to the page component as props
+      props: { err: `getting data byPath, ${err_message}` },
     };
   }
   if (page === null) return { notFound: true };
   return {
-    props: { page, siteName: params.siteName, errors }, // will be passed to the page component as props
+    props: { page, siteName: params.siteName, errors },
   };
 }
 

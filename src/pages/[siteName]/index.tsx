@@ -1,11 +1,11 @@
-import { GetServerSidePropsContext, NextPage } from "next";
-import { getByPath } from "../../../lib/posts";
+import { GetServerSidePropsContext } from "next";
+import { GraphqlError, HomePage, getByPath } from "../../../lib/posts";
 
 interface Probs {
   page: HomePage;
   siteName: string;
   err: string;
-  errors: any;
+  errors: GraphqlError[];
 }
 
 const HomePage = ({ page, siteName, err, errors }: Probs) => {
@@ -20,7 +20,11 @@ const HomePage = ({ page, siteName, err, errors }: Probs) => {
     <>
       <div className="grid grid-cols-4 justify-items-center ">
         <div className="col-start-2 col-end-4">
-          <p>{errors}</p>
+          <p>
+            {errors.map((err) => (
+              <p key={err.message}>{err.message}</p>
+            ))}
+          </p>
           This is home page for {siteName}
           <p>{page.title}</p>
         </div>
@@ -28,10 +32,6 @@ const HomePage = ({ page, siteName, err, errors }: Probs) => {
     </>
   );
 };
-
-interface HomePage {
-  title: string;
-}
 
 export async function getServerSideProps({
   params,
@@ -43,7 +43,7 @@ export async function getServerSideProps({
   try {
     let data = await getByPath("/");
     page = data.page as HomePage;
-    errors = data.errors || null;
+    errors = data.errors;
   } catch (err: any) {
     let err_message = err.message;
     return {
