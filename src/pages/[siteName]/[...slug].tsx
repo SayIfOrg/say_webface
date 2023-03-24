@@ -7,9 +7,10 @@ import {
   Page,
 } from "../../../lib/posts";
 
-type ImageProbs =
-  | { id: number; url?: undefined }
-  | { url: string; id?: undefined };
+interface ImageProbs {
+  id?: number;
+  url?: string | null;
+}
 
 const Image = ({ id, url }: ImageProbs) => {
   let errors;
@@ -22,14 +23,30 @@ const Image = ({ id, url }: ImageProbs) => {
     if (!data) return <div>Loading...</div>;
 
     url = data.url;
-    errors = data.errors || null;
+    errors = data.errors;
   }
-  return (
-    <>
-      <p>{errors}</p>
-      <img src={url}></img>
-    </>
+  let errorsNode = (
+    <p>
+      {errors?.map((err) => (
+        <p key={err.message}>{err.message}</p>
+      ))}
+    </p>
   );
+  if (typeof url === "string") {
+    return (
+      <>
+        {errorsNode}
+        <img src={url}></img>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {errorsNode}
+        <p>No url</p>
+      </>
+    );
+  }
 };
 
 interface ParagraphProbs {

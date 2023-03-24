@@ -53,8 +53,8 @@ export async function getByPath(path: string) {
     }),
   });
   let json = await response.json();
-  return { page: json.data.page, errors: json.errors || [] } as {
-    page: Page;
+  return { page: json.data.page ?? null, errors: json.errors ?? [] } as {
+    page: Page | null;
     errors: GraphqlError[];
   };
 }
@@ -82,7 +82,7 @@ export async function getPagesByType(type: keyof typeof pageTypeMapping) {
     }),
   });
   let json = await response.json();
-  return { pages: json.data.pages, errors: json.errors } as {
+  return { pages: json.data.pages ?? [], errors: json.errors ?? [] } as {
     pages: Page[];
     errors: GraphqlError[];
   };
@@ -107,5 +107,8 @@ export async function getRendition(args: { imageId: number; fill: string }) {
     }),
   });
   let json = await response.json();
-  return { url: json.data.image.rendition.url, errors: json.errors };
+  return {
+    url: json.data.image.rendition.url ?? null,
+    errors: json.errors ?? [],
+  } as { url: string | null; errors: GraphqlError[] };
 }
