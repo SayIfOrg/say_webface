@@ -50,6 +50,7 @@ export async function getServerSideProps({
       props: { err: `getting data byPath, ${err_message}` },
     };
   }
+  if (page === null) return { notFound: true };
   return {
     props: { page: page, siteName: params.siteName, errors: errors },
   };
