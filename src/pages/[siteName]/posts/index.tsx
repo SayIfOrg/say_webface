@@ -1,25 +1,36 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import useSWR from "swr";
-import { getPagesByType, Page } from "../../../../lib/posts";
+import { useQuery } from "react-query";
+import { getPagesByType } from "../../../../lib/posts";
 
 interface PostProbs {
-  data: Page;
   siteName: string;
+  pageTitle: string;
+  pageUrl: string;
 }
-const Post = ({ data, siteName }: PostProbs) => {
-  const link_address = `/${siteName}` + data.url;
+const Post = ({ pageTitle, pageUrl, siteName }: PostProbs) => {
+  const link_address = `/${siteName}` + pageUrl;
   return (
     <div>
-      <Link href={link_address}>{data.title}</Link>
+      <Link href={link_address}>{pageTitle}</Link>
     </div>
   );
 };
 
-const renderPosts = (pages: Page[], siteName: string) => {
+const renderPosts = (
+  pages: { id: string; url: string; title: string }[],
+  siteName: string
+) => {
   let posts = [];
   for (let i of pages) {
-    posts.push(<Post key={i.id} data={i} siteName={siteName}></Post>);
+    posts.push(
+      <Post
+        key={i.id}
+        pageTitle={i.title}
+        pageUrl={i.url}
+        siteName={siteName}
+      ></Post>
+    );
   }
   return posts;
 };
@@ -27,21 +38,25 @@ const renderPosts = (pages: Page[], siteName: string) => {
 const PostListing = () => {
   const router = useRouter();
   const { siteName } = router.query as { siteName: string };
-  const { data, error, isLoading } = useSWR("post", getPagesByType);
-  if (error) return <div>Failed to load</div>;
-  if (isLoading || !data) return <div>Loading...</div>;
+  const { data, error, isLoading } = useQuery(
+    ["posts"],
+    async () => await getPagesByType("post")
+  );
+  if (error) {
+    return <div>Failed to load, {String(error)}</div>;
+  }
+  if (isLoading) return <div>Loading...</div>;
+  if (!data) return <div>Not possible</div>;
+  // I know better, id and url are included so
+  let posts = data.pages.map((p) => {
+    return { id: p.id, title: p.title, url: p.url };
+  }) as { id: string; url: string; title: string }[];
 
   return (
     <>
       <div className="grid grid-cols-4 justify-items-center ">
         <div className="col-start-2 col-end-4">
-          <p>
-            {data.errors.map((err) => (
-              <p key={err.message}>{err.message}</p>
-            ))}
-          </p>
-
-          {renderPosts(data.pages, siteName)}
+          {renderPosts(posts, siteName)}
         </div>
       </div>
     </>

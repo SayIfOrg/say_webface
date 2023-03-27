@@ -1,3 +1,6 @@
+import request from "graphql-request";
+import { graphql } from "../src/gql";
+
 export interface Page {
   id?: string;
   title?: string;
@@ -64,28 +67,23 @@ const pageTypeMapping = {
   home: ["home.HomePage"],
 };
 
-export async function getPagesByType(type: keyof typeof pageTypeMapping) {
+// Filterable pages with their base fields QueryDocument
+export const PageBaseFieldsQD = graphql(`
+  query getPagesByType($content_type: String) {
+    pages(contentType: $content_type) {
+      id
+      title
+      url
+    }
+  }
+`);
+
+export function getPagesByType(type: keyof typeof pageTypeMapping) {
   const typeQuery = pageTypeMapping[type].join(",");
-  let response = await fetch("http://127.0.0.1:8000/graphql/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: `
-			query {
-				pages(contentType: "${typeQuery}") {
-					id
-					title
-					url
-				}
-			}
-			`,
-    }),
+
+  return request("http://127.0.0.1:8000/graphql/", PageBaseFieldsQD, {
+    content_type: typeQuery,
   });
-  let json = await response.json();
-  return { pages: json.data.pages ?? [], errors: json.errors ?? [] } as {
-    pages: Page[];
-    errors: GraphqlError[];
-  };
 }
 
 export async function getRendition(args: { imageId: number; fill: string }) {
