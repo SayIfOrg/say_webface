@@ -1,4 +1,5 @@
 import request from "graphql-request";
+import { env } from "../src/env/server.mjs";
 import { graphql } from "../src/gql";
 
 export interface Page {
@@ -19,7 +20,7 @@ export interface GraphqlError {
 }
 
 export async function getByPath(path: string) {
-  let response = await fetch("http://127.0.0.1:8000/graphql/", {
+  let response = await fetch(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -81,7 +82,7 @@ export const PageBaseFieldsQD = graphql(`
 export function getPagesByType(type: keyof typeof pageTypeMapping) {
   const typeQuery = pageTypeMapping[type].join(",");
 
-  return request("http://127.0.0.1:8000/graphql/", PageBaseFieldsQD, {
+  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageBaseFieldsQD, {
     content_type: typeQuery,
   });
 }
@@ -89,7 +90,7 @@ export function getPagesByType(type: keyof typeof pageTypeMapping) {
 export async function getRendition(args: { imageId: number; fill: string }) {
   let imageId = args.imageId;
   let fill = args.fill;
-  let response = await fetch("http://127.0.0.1:8000/graphql/", {
+  let response = await fetch(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
