@@ -13,17 +13,15 @@ export const PageFullFieldsFragment = graphql(`
     __typename
     ... on SimplePage {
       body {
+        id
         __typename
         ... on RichTextBlock {
-          id
           value
         }
         ... on CharBlock {
-          id
           value
         }
         ... on ImageChooserBlock {
-          id
           image {
             id
             rendition(fill: "500x400") {
