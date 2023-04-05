@@ -1,21 +1,7 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getPagesByType } from "../../../../lib/posts";
-
-interface PostProps {
-  siteName: string;
-  pageTitle: string;
-  pageUrl: string;
-}
-const Post = ({ pageTitle, pageUrl, siteName }: PostProps) => {
-  const link_address = `/${siteName}` + pageUrl;
-  return (
-    <div>
-      <Link href={link_address}>{pageTitle}</Link>
-    </div>
-  );
-};
+import { Post } from "../../../components/post";
 
 const renderPosts = (
   pages: { id: string; url: string; title: string }[],
