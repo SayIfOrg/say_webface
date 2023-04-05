@@ -5,20 +5,12 @@ import { FragmentType, useFragment } from "../../gql/fragment-masking";
 interface Probs {
   page: FragmentType<typeof PageFullFieldsFragment>;
   siteName: string;
-  err: string;
 }
 
 const HomePage = (props: Probs) => {
   const page = useFragment(PageFullFieldsFragment, props.page);
   if (page.__typename !== "HomePage") {
     throw new Error("homepage should be of type HomePage");
-  }
-  if (props.err) {
-    return (
-      <>
-        <div>{props.err}</div>
-      </>
-    );
   }
   return (
     <>
