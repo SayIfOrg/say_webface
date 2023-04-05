@@ -1,17 +1,22 @@
 import { GetServerSidePropsContext } from "next";
-import { HomePage, getByPath } from "../../../lib/posts";
+import { getByPath, PageFullFieldsFragment } from "../../../lib/posts";
+import { FragmentType, useFragment } from "../../gql/fragment-masking";
 
 interface Probs {
-  page: HomePage;
+  page: FragmentType<typeof PageFullFieldsFragment>;
   siteName: string;
   err: string;
 }
 
-const HomePage = ({ page, siteName, err }: Probs) => {
-  if (err) {
+const HomePage = (props: Probs) => {
+  const page = useFragment(PageFullFieldsFragment, props.page);
+  if (page.__typename !== "HomePage") {
+    throw new Error("homepage should be of type HomePage");
+  }
+  if (props.err) {
     return (
       <>
-        <div>{err}</div>
+        <div>{props.err}</div>
       </>
     );
   }
@@ -19,7 +24,7 @@ const HomePage = ({ page, siteName, err }: Probs) => {
     <>
       <div className="grid grid-cols-4 justify-items-center ">
         <div className="col-start-2 col-end-4">
-          This is home page for {siteName}
+          This is home page for {props.siteName}
           <p>{page.title}</p>
         </div>
       </div>

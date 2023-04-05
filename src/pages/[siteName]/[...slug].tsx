@@ -1,11 +1,15 @@
 import { GetServerSidePropsContext } from "next";
 import useSWR from "swr";
-import { getByPath, getRendition, Page } from "../../../lib/posts";
+import {
+  getByPath,
+  getRendition,
+  PageFullFieldsFragment,
+} from "../../../lib/posts";
+import { FragmentType, useFragment } from "../../gql/fragment-masking";
 
-interface ImageProbs {
-  id?: number;
-  url?: string | null;
-}
+type ImageProbs =
+  | { id: string; url?: undefined }
+  | { id?: undefined; url: string };
 
 const Image = ({ id, url }: ImageProbs) => {
   let errors;
@@ -17,7 +21,7 @@ const Image = ({ id, url }: ImageProbs) => {
     if (error) return <div>Failed to load {error.message}</div>;
     if (!data) return <div>Loading...</div>;
 
-    url = data.url;
+    url = data.url ?? "";
     errors = data.errors;
   }
   let errorsNode = (
@@ -27,18 +31,18 @@ const Image = ({ id, url }: ImageProbs) => {
       ))}
     </p>
   );
-  if (typeof url === "string") {
+  if (url === "") {
     return (
       <>
         {errorsNode}
-        <img src={url}></img>
+        <p>No url</p>
       </>
     );
   } else {
     return (
       <>
         {errorsNode}
-        <p>No url</p>
+        <img src={url}></img>
       </>
     );
   }
@@ -53,38 +57,51 @@ const Paragraph = ({ value }: ParagraphProbs) => {
 };
 
 interface Probs {
-  page: Page;
+  page: FragmentType<typeof PageFullFieldsFragment>;
   siteName: string;
 }
 
-const Page = ({ page, siteName }: Probs) => {
-  let components = [];
-  for (const block of page.body) {
-    // switch (block.type) {
+const Page = (props: Probs) => {
+  const page = useFragment(PageFullFieldsFragment, props.page);
+  if (page.__typename === "SimplePage" && page.body) {
+    let components = [];
+    for (const block of page.body) {
+      if (!block?.__typename) {
+        throw new Error("block does not have __typename");
+      }
+      // switch (block.type) {
 
-    // }
-    if (block.blockType === "CharBlock") {
-      components.push(<p key={block.id}>{block.value}</p>);
-    } else if (block.blockType === "RichTextBlock") {
-      components.push(
-        <Paragraph key={block.id} value={block.value}></Paragraph>
-      );
-    } else if (block.blockType === "ImageChooserBlock") {
-      components.push(
-        <Image key={block.id} url={block.image.rendition.url}></Image>
-      );
+      // }
+      if (block.__typename === "CharBlock") {
+        components.push(<p key={block.id}>{block.value}</p>);
+      } else if (block.__typename === "RichTextBlock") {
+        components.push(
+          <Paragraph key={block.id} value={block.value}></Paragraph>
+        );
+      } else if (block.__typename === "ImageChooserBlock") {
+        // url may not be there duo to rendition error but id is defiantly there;
+        if (!block.id && !block.image.rendition) {
+          throw new Error("neither of image id nor rendition url exists.")
+        }
+        let idOrUrl = block.image.rendition
+          ? { url: block.image.rendition.url }
+          : ({ id: block.image.id } as { id: string });
+        components.push(<Image key={block.id} {...idOrUrl}></Image>);
+      }
     }
-  }
-  return (
-    <>
-      <div className="grid grid-cols-4 justify-items-center ">
-        <div className="col-start-2 col-end-4">
-          <p>{siteName}</p>
-          <div>{components}</div>
+    return (
+      <>
+        <div className="grid grid-cols-4 justify-items-center ">
+          <div className="col-start-2 col-end-4">
+            <p>{props.siteName}</p>
+            <div>{components}</div>
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    return <p>this page is not SimplePage</p>;
+  }
 };
 
 export async function getServerSideProps({

@@ -2,51 +2,45 @@ import request from "graphql-request";
 import { env } from "../src/env/server.mjs";
 import { graphql } from "../src/gql";
 
-export interface Page {
-  id?: string;
-  title?: string;
-  slug?: string;
-  url?: string;
-  seoTitle?: string;
-  body?: any;
-}
-
-export interface HomePage {
-  title: string;
-}
-
 export interface GraphqlError {
   message: string;
 }
+
+// Page fragment with all fields
+export const PageFullFieldsFragment = graphql(`
+  fragment PageFullItem on PageInterface {
+    title
+    __typename
+    ... on SimplePage {
+      body {
+        __typename
+        ... on RichTextBlock {
+          id
+          value
+        }
+        ... on CharBlock {
+          id
+          value
+        }
+        ... on ImageChooserBlock {
+          id
+          image {
+            id
+            rendition(fill: "500x400") {
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+`);
 
 // Get a page by path variable QueryDocument
 export const PageFullFieldsQD = graphql(`
   query getPageByPath($path: String!) {
     page(urlPath: $path) {
-      title
-      ... on SimplePage {
-        body {
-          ... on RichTextBlock {
-            id
-            blockType
-            value
-          }
-          ... on CharBlock {
-            id
-            blockType
-            value
-          }
-          ... on ImageChooserBlock {
-            id
-            blockType
-            image {
-              rendition(fill: "500x400") {
-                url
-              }
-            }
-          }
-        }
-      }
+      ...PageFullItem
     }
   }
 `);
