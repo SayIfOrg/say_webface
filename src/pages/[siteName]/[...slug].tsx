@@ -1,11 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import useSWR from "swr";
-import {
-  getByPath,
-  getRendition,
-  GraphqlError,
-  Page,
-} from "../../../lib/posts";
+import { getByPath, getRendition, Page } from "../../../lib/posts";
 
 interface ImageProbs {
   id?: number;
@@ -60,10 +55,9 @@ const Paragraph = ({ value }: ParagraphProbs) => {
 interface Probs {
   page: Page;
   siteName: string;
-  errors: GraphqlError[];
 }
 
-const Page = ({ page, siteName, errors }: Probs) => {
+const Page = ({ page, siteName }: Probs) => {
   let components = [];
   for (const block of page.body) {
     // switch (block.type) {
@@ -85,11 +79,6 @@ const Page = ({ page, siteName, errors }: Probs) => {
     <>
       <div className="grid grid-cols-4 justify-items-center ">
         <div className="col-start-2 col-end-4">
-          <p>
-            {errors.map((err) => (
-              <p key={err.message}>{err.message}</p>
-            ))}
-          </p>
           <p>{siteName}</p>
           <div>{components}</div>
         </div>
@@ -104,21 +93,10 @@ export async function getServerSideProps({
   if (!params) return { notFound: true };
   if (!params.siteName.startsWith("@")) return { notFound: true };
   let path = params.slug.join("/");
-  let page;
-  let errors;
-  try {
-    let data = await getByPath(path);
-    page = data.page;
-    errors = data.errors;
-  } catch (err: any) {
-    let err_message = err.message;
-    return {
-      props: { err: `getting data byPath, ${err_message}` },
-    };
-  }
-  if (page === null) return { notFound: true };
+  let { page } = await getByPath(path);
+  if (!page) return { notFound: true };
   return {
-    props: { page, siteName: params.siteName, errors },
+    props: { page, siteName: params.siteName },
   };
 }
 

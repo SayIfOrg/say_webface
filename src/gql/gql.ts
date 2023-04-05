@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query getPageByPath($path: String!) {\n    page(urlPath: $path) {\n      title\n      ... on SimplePage {\n        body {\n          ... on RichTextBlock {\n            id\n            blockType\n            value\n          }\n          ... on CharBlock {\n            id\n            blockType\n            value\n          }\n          ... on ImageChooserBlock {\n            id\n            blockType\n            image {\n              rendition(fill: \"500x400\") {\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n": types.GetPageByPathDocument,
     "\n  query getPagesByType($content_type: String) {\n    pages(contentType: $content_type) {\n      id\n      title\n      url\n    }\n  }\n": types.GetPagesByTypeDocument,
 };
 
@@ -30,6 +31,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getPageByPath($path: String!) {\n    page(urlPath: $path) {\n      title\n      ... on SimplePage {\n        body {\n          ... on RichTextBlock {\n            id\n            blockType\n            value\n          }\n          ... on CharBlock {\n            id\n            blockType\n            value\n          }\n          ... on ImageChooserBlock {\n            id\n            blockType\n            image {\n              rendition(fill: \"500x400\") {\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPageByPath($path: String!) {\n    page(urlPath: $path) {\n      title\n      ... on SimplePage {\n        body {\n          ... on RichTextBlock {\n            id\n            blockType\n            value\n          }\n          ... on CharBlock {\n            id\n            blockType\n            value\n          }\n          ... on ImageChooserBlock {\n            id\n            blockType\n            image {\n              rendition(fill: \"500x400\") {\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

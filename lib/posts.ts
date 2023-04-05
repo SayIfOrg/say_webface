@@ -19,48 +19,42 @@ export interface GraphqlError {
   message: string;
 }
 
+// Get a page by path variable QueryDocument
+export const PageFullFieldsQD = graphql(`
+  query getPageByPath($path: String!) {
+    page(urlPath: $path) {
+      title
+      ... on SimplePage {
+        body {
+          ... on RichTextBlock {
+            id
+            blockType
+            value
+          }
+          ... on CharBlock {
+            id
+            blockType
+            value
+          }
+          ... on ImageChooserBlock {
+            id
+            blockType
+            image {
+              rendition(fill: "500x400") {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
 export async function getByPath(path: string) {
-  let response = await fetch(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: `
-			query {
-				page(urlPath: "${path}") {
-					title
-					... on SimplePage {
-						body {
-							... on RichTextBlock {
-								id
-								blockType
-								value
-							}
-							... on CharBlock {
-								id
-								blockType
-								value
-							}
-							...on ImageChooserBlock {
-								id
-								blockType
-								image {
-									rendition(fill: "500x400") {
-										url
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			`,
-    }),
+  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageFullFieldsQD, {
+    path: path,
   });
-  let json = await response.json();
-  return { page: json.data.page ?? null, errors: json.errors ?? [] } as {
-    page: Page | null;
-    errors: GraphqlError[];
-  };
 }
 
 const pageTypeMapping = {
@@ -69,7 +63,7 @@ const pageTypeMapping = {
 };
 
 // Filterable pages with their base fields QueryDocument
-export const PageBaseFieldsQD = graphql(`
+export const PagesBaseFieldsQD = graphql(`
   query getPagesByType($content_type: String) {
     pages(contentType: $content_type) {
       id
@@ -82,7 +76,7 @@ export const PageBaseFieldsQD = graphql(`
 export function getPagesByType(type: keyof typeof pageTypeMapping) {
   const typeQuery = pageTypeMapping[type].join(",");
 
-  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageBaseFieldsQD, {
+  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PagesBaseFieldsQD, {
     content_type: typeQuery,
   });
 }
