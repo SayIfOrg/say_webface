@@ -16,6 +16,7 @@ const documents = {
     "\n  fragment PageFullItem on PageInterface {\n    title\n    __typename\n    ... on SimplePage {\n      body {\n        __typename\n        ... on RichTextBlock {\n          id\n          value\n        }\n        ... on CharBlock {\n          id\n          value\n        }\n        ... on ImageChooserBlock {\n          id\n          image {\n            id\n            rendition(fill: \"500x400\") {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n": types.PageFullItemFragmentDoc,
     "\n  query getPageByPath($path: String!) {\n    page(urlPath: $path) {\n      ...PageFullItem\n    }\n  }\n": types.GetPageByPathDocument,
     "\n  query getPagesByType($content_type: String) {\n    pages(contentType: $content_type) {\n      id\n      title\n      url\n    }\n  }\n": types.GetPagesByTypeDocument,
+    "\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n": types.GetRenditionDocument,
 };
 
 /**
@@ -44,6 +45,10 @@ export function graphql(source: "\n  query getPageByPath($path: String!) {\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query getPagesByType($content_type: String) {\n    pages(contentType: $content_type) {\n      id\n      title\n      url\n    }\n  }\n"): (typeof documents)["\n  query getPagesByType($content_type: String) {\n    pages(contentType: $content_type) {\n      id\n      title\n      url\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n"): (typeof documents)["\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

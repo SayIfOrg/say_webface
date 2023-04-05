@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import useSWR from "swr";
+import { useQuery } from "react-query";
 import {
   getByPath,
   getRendition,
@@ -12,39 +12,19 @@ type ImageProbs =
   | { id?: undefined; url: string };
 
 const Image = ({ id, url }: ImageProbs) => {
-  let errors;
-  if (!url) {
-    const { data, error } = useSWR(
-      { imageId: id, fill: "50x50" },
-      getRendition
+  if (!url && id) {
+    const { data, error } = useQuery(
+      ["rendition"],
+      async () => await getRendition(id, { fill: "400x400" })
     );
-    if (error) return <div>Failed to load {error.message}</div>;
+    if (error) return <div>Failed to load {String(error)}</div>;
     if (!data) return <div>Loading...</div>;
-
-    url = data.url ?? "";
-    errors = data.errors;
+    url = data.image?.rendition?.url ?? "";
   }
-  let errorsNode = (
-    <p>
-      {errors?.map((err) => (
-        <p key={err.message}>{err.message}</p>
-      ))}
-    </p>
-  );
   if (url === "") {
-    return (
-      <>
-        {errorsNode}
-        <p>No url</p>
-      </>
-    );
+    return <p>No url</p>;
   } else {
-    return (
-      <>
-        {errorsNode}
-        <img src={url}></img>
-      </>
-    );
+    return <img src={url}></img>;
   }
 };
 
@@ -81,11 +61,9 @@ const Page = (props: Probs) => {
       } else if (block.__typename === "ImageChooserBlock") {
         // url may not be there duo to rendition error but id is defiantly there;
         if (!block.id && !block.image.rendition) {
-          throw new Error("neither of image id nor rendition url exists.")
+          throw new Error("neither of image id nor rendition url exists.");
         }
-        let idOrUrl = block.image.rendition
-          ? { url: block.image.rendition.url }
-          : ({ id: block.image.id } as { id: string });
+        let idOrUrl = { id: block.image.id } as { id: string };
         components.push(<Image key={block.id} {...idOrUrl}></Image>);
       }
     }

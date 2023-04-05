@@ -75,27 +75,50 @@ export function getPagesByType(type: keyof typeof pageTypeMapping) {
   });
 }
 
-export async function getRendition(args: { imageId: number; fill: string }) {
-  let imageId = args.imageId;
-  let fill = args.fill;
-  let response = await fetch(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: `
-							query {
-								image(id: ${imageId}) {
-									rendition(fill: "${fill}") {
-										url
-									}
-								}
-							}
-							`,
-    }),
+// Filterable pages with their base fields QueryDocument
+export const RenditionQD = graphql(`
+  query getRendition(
+    $imageId: ID!
+    $fill: String
+    $min: String
+    $max: String
+    $height: Int
+    $width: Int
+    $format: String
+  ) {
+    image(id: $imageId) {
+      rendition(
+        fill: $fill
+        min: $min
+        max: $max
+        height: $height
+        width: $width
+        format: $format
+      ) {
+        url
+      }
+    }
+  }
+`);
+
+export async function getRendition(
+  imageId: string,
+  sizing: {
+    fill?: string;
+    min?: string;
+    max?: string;
+    height?: number;
+    width?: number;
+  }, 
+  format?: "jpeg" | "png" | "gif" | "webp"
+) {
+  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, RenditionQD, {
+    imageId: imageId,
+    fill: sizing.fill,
+    min: sizing.min,
+    max: sizing.max,
+    height: sizing.height,
+    width: sizing.width,
+    format: format,
   });
-  let json = await response.json();
-  return {
-    url: json.data.image.rendition.url ?? null,
-    errors: json.errors ?? [],
-  } as { url: string | null; errors: GraphqlError[] };
 }
