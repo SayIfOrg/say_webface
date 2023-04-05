@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getPagesByType } from "../../../../lib/posts";
 
-interface PostProbs {
+interface PostProps {
   siteName: string;
   pageTitle: string;
   pageUrl: string;
 }
-const Post = ({ pageTitle, pageUrl, siteName }: PostProbs) => {
+const Post = ({ pageTitle, pageUrl, siteName }: PostProps) => {
   const link_address = `/${siteName}` + pageUrl;
   return (
     <div>

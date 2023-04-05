@@ -7,11 +7,11 @@ import {
 } from "../../../lib/posts";
 import { FragmentType, useFragment } from "../../gql/fragment-masking";
 
-type ImageProbs =
+type ImageProps =
   | { id: string; url?: undefined }
   | { id?: undefined; url: string };
 
-const Image = ({ id, url }: ImageProbs) => {
+const Image = ({ id, url }: ImageProps) => {
   if (!url && id) {
     const { data, error } = useQuery(
       ["rendition"],
@@ -28,20 +28,20 @@ const Image = ({ id, url }: ImageProbs) => {
   }
 };
 
-interface ParagraphProbs {
+interface ParagraphProps {
   value: string;
 }
 
-const Paragraph = ({ value }: ParagraphProbs) => {
+const Paragraph = ({ value }: ParagraphProps) => {
   return <div dangerouslySetInnerHTML={{ __html: value }}></div>;
 };
 
-interface Probs {
+interface Props {
   page: FragmentType<typeof PageFullFieldsFragment>;
   siteName: string;
 }
 
-const Page = (props: Probs) => {
+const Page = (props: Props) => {
   const page = useFragment(PageFullFieldsFragment, props.page);
   if (page.__typename === "SimplePage" && page.body) {
     let components = [];

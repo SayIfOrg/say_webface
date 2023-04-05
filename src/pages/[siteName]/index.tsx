@@ -2,12 +2,12 @@ import { GetServerSidePropsContext } from "next";
 import { getByPath, PageFullFieldsFragment } from "../../../lib/posts";
 import { FragmentType, useFragment } from "../../gql/fragment-masking";
 
-interface Probs {
+interface Props {
   page: FragmentType<typeof PageFullFieldsFragment>;
   siteName: string;
 }
 
-const HomePage = (props: Probs) => {
+const HomePage = (props: Props) => {
   const page = useFragment(PageFullFieldsFragment, props.page);
   if (page.__typename !== "HomePage") {
     throw new Error("homepage should be of type HomePage");
