@@ -1,6 +1,6 @@
 import request from "graphql-request";
 import { env } from "../src/env/server.mjs";
-import { graphql } from "../src/gql";
+import { graphql } from "../src/gql/wagtail";
 
 export interface GraphqlError {
   message: string;

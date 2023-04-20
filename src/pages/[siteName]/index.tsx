@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { getByPath, PageFullFieldsFragment } from "../../../lib/posts";
-import { FragmentType, useFragment } from "../../gql/fragment-masking";
+import { FragmentType, useFragment } from "../../gql/wagtail/fragment-masking";
 
 interface Props {
   page: FragmentType<typeof PageFullFieldsFragment>;
