@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from "next";
 import { getByPath, PageFullFieldsFragment } from "../../../lib/posts";
 import { Paragraph, Image } from "../../components/basicBlocks";
 import { FragmentType, useFragment } from "../../gql/wagtail/fragment-masking";
+import { Comment } from "../../components/comment";
 
 interface Props {
   page: FragmentType<typeof PageFullFieldsFragment>;
@@ -40,6 +41,10 @@ const Page = (props: Props) => {
           <div className="col-start-2 col-end-4">
             <p>{props.siteName}</p>
             <div>{components}</div>
+          </div>
+          <div className="col-start-2 col-end-4">
+            <p>Comments are:</p>
+            <Comment />
           </div>
         </div>
       </>
