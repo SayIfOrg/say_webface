@@ -3,33 +3,24 @@ import { createClient as createSSEClient } from "graphql-sse";
 import { useEffect, useState } from "react";
 import { subscribeWS, subscribeSSE } from "../../lib/clients";
 import { env } from "../env/client.mjs";
-import { Comment as GComment } from "../gql/keeper/graphql";
+import { LatestCommentsSubscription } from "../gql/keeper/graphql";
+import { latestComments } from "../../lib/keeper/commenting";
 
 export const WSComment = () => {
-  type Comment = {
-    id: string;
-    content: string;
-  };
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<
+    LatestCommentsSubscription["latestComment"][]
+  >([]);
 
   useEffect(() => {
     const client = createClient({
       url: `ws://${env.NEXT_PUBLIC_SAY_KEEPER_GQL_ADDRESS}`,
     });
+
     type Subscription = {
-      data: {
-        latestComment: GComment;
-      };
+      data: LatestCommentsSubscription;
     };
     const subscription = subscribeWS<Subscription>(client, {
-      query: `
-			subscription {
-				latestComment {
-					id
-					content
-				}
-			}
-			`,
+      query: latestComments,
     });
 
     async function Receive() {
@@ -67,30 +58,20 @@ export const WSComment = () => {
 };
 
 export const SSEComment = () => {
-  type Comment = {
-    id: string;
-    content: string;
-  };
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<
+    LatestCommentsSubscription["latestComment"][]
+  >([]);
 
   useEffect(() => {
     const client = createSSEClient({
       url: `http://${env.NEXT_PUBLIC_SAY_KEEPER_GQL_ADDRESS}`,
     });
+
     type Subscription = {
-      data: {
-        latestComment: GComment;
-      };
+      data: LatestCommentsSubscription;
     };
     const subscription = subscribeSSE<Subscription>(client, {
-      query: `
-			subscription {
-				latestComment {
-					id
-					content
-				}
-			}
-			`,
+      query: latestComments,
     });
 
     async function Receive() {

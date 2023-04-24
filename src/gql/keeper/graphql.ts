@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -57,3 +58,11 @@ export type User = {
   id: Scalars['ID'];
   name: Scalars['String'];
 };
+
+export type LatestCommentsSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LatestCommentsSubscription = { __typename?: 'Subscription', latestComment: { __typename?: 'Comment', id: string, content: string } };
+
+
+export const LatestCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"latestComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<LatestCommentsSubscription, LatestCommentsSubscriptionVariables>;

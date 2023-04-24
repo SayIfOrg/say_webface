@@ -6,12 +6,12 @@ const config: CodegenConfig = {
     "./src/gql/wagtail/": {
       schema: "http://127.0.0.1:8000/graphql/",
       preset: "client",
-      documents: ["lib/**/*.ts"],
+      documents: ["lib/wagtail/**/*.ts", "lib/posts.ts"],
     },
     "./src/gql/keeper/": {
       schema: "http://127.0.0.1:8080/graphql/",
       preset: "client",
-      documents: ["pages/keeper/*.tsx"]
+      documents: ["lib/keeper/**/*.ts"]
     }
   },
 };
