@@ -1,14 +1,11 @@
 FROM node:18-buster-slim
 
-# Cache potential requirements
-RUN --mount=type=cache,target=/root/.npm
-
 # Use /project folder as a directory where the source code is stored.
 WORKDIR /project
-run echo h
+
 ## Install the project requirements ##
 COPY package.json package-lock.json .
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm install
 
 # Add user that will be used in the container.
 RUN useradd app
