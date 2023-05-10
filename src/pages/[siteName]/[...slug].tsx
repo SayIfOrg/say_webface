@@ -64,7 +64,7 @@ export async function getServerSideProps({
   if (!params) return { notFound: true };
   if (!params.siteName.startsWith("@")) return { notFound: true };
   let path = params.slug.join("/");
-  let { page } = await getByPath(path);
+  let { page } = await getByPath(params.siteName.substring(1), path);
   if (!page) return { notFound: true };
   return {
     props: { page, siteName: params.siteName },

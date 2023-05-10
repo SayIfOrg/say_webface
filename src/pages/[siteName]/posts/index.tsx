@@ -25,8 +25,8 @@ const PostListing = () => {
   const router = useRouter();
   const { siteName } = router.query as { siteName: string };
   const { data, error, isLoading } = useQuery(
-    ["posts"],
-    async () => await getPagesByType("post")
+    [siteName, "posts"],
+    async () => await getPagesByType(siteName.substring(1), "post")
   );
   if (error) {
     return <div>Failed to load, {String(error)}</div>;
