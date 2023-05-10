@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { getByPath, PageFullFieldsFragment } from "../../../lib/posts";
+import { getByPath, getPageByType, getPagesByType, PageFullFieldsFragment } from "../../../lib/posts";
 import { FragmentType, useFragment } from "../../gql/wagtail/fragment-masking";
 
 interface Props {
@@ -29,7 +29,7 @@ export async function getServerSideProps({
 }: GetServerSidePropsContext<{ siteName: string }>) {
   if (!params) return { notFound: true };
   if (!params.siteName.startsWith("@")) return { notFound: true };
-  let { page } = await getByPath(params.siteName.substring(1), "/home");
+  let { page } = await getPageByType(params.siteName.substring(1), "home");
   if (!page) return { notFound: true };
   return {
     props: { page: page, siteName: params.siteName },

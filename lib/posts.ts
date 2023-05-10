@@ -36,8 +36,8 @@ export const PageFullFieldsFragment = graphql(`
 
 // Get a page by path variable QueryDocument
 export const PageFullFieldsQD = graphql(`
-  query getPageByPath($sitename: String!, $path: String!) {
-    page(sitename: $sitename, urlPath: $path) {
+  query getPageByPath($sitename: String!, $path: String, $content_type: String) {
+    page(sitename: $sitename, urlPath: $path, contentType: $content_type) {
       ...PageFullItem
     }
   }
@@ -70,6 +70,15 @@ export function getPagesByType(sitename: string, type: keyof typeof pageTypeMapp
   const typeQuery = pageTypeMapping[type].join(",");
 
   return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PagesBaseFieldsQD, {
+    sitename: sitename,
+    content_type: typeQuery,
+  });
+}
+
+export function getPageByType(sitename: string, type: keyof typeof pageTypeMapping) {
+  const typeQuery = pageTypeMapping[type].join(",");
+
+  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageFullFieldsQD, {
     sitename: sitename,
     content_type: typeQuery,
   });
