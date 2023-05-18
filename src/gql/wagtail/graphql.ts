@@ -258,7 +258,6 @@ export type HomePage = PageInterface & {
   __typename?: 'HomePage';
   aliasOf?: Maybe<Page>;
   ancestors: Array<PageInterface>;
-  body?: Maybe<Array<Maybe<StreamFieldInterface>>>;
   children: Array<PageInterface>;
   contentType: Scalars['String'];
   depth?: Maybe<Scalars['Int']>;
@@ -289,7 +288,7 @@ export type HomePage = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   urlPath: Scalars['String'];
 };
 
@@ -446,6 +445,101 @@ export type ListBlock = StreamFieldInterface & {
   rawValue: Scalars['String'];
 };
 
+export type ListingPage = PageInterface & {
+  __typename?: 'ListingPage';
+  aliasOf?: Maybe<Page>;
+  ancestors: Array<PageInterface>;
+  body?: Maybe<Array<Maybe<StreamFieldInterface>>>;
+  children: Array<PageInterface>;
+  contentType: Scalars['String'];
+  depth?: Maybe<Scalars['Int']>;
+  descendants: Array<PageInterface>;
+  draftTitle: Scalars['String'];
+  expireAt?: Maybe<Scalars['DateTime']>;
+  expired: Scalars['Boolean'];
+  firstPublishedAt?: Maybe<Scalars['DateTime']>;
+  goLiveAt?: Maybe<Scalars['DateTime']>;
+  hasUnpublishedChanges: Scalars['Boolean'];
+  id?: Maybe<Scalars['ID']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']>;
+  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
+  listingpagePages?: Maybe<Array<Maybe<PageInterface>>>;
+  listingpageSimplepages?: Maybe<Array<Maybe<PageInterface>>>;
+  live: Scalars['Boolean'];
+  locked?: Maybe<Scalars['Boolean']>;
+  lockedAt?: Maybe<Scalars['DateTime']>;
+  nextSiblings: Array<PageInterface>;
+  numchild: Scalars['Int'];
+  pageType?: Maybe<Scalars['String']>;
+  parent?: Maybe<PageInterface>;
+  path: Scalars['String'];
+  previousSiblings: Array<PageInterface>;
+  searchDescription?: Maybe<Scalars['String']>;
+  searchScore?: Maybe<Scalars['Float']>;
+  seoTitle: Scalars['String'];
+  showInMenus: Scalars['Boolean'];
+  siblings: Array<PageInterface>;
+  slug: Scalars['String'];
+  title: Scalars['String'];
+  translationKey: Scalars['UUID'];
+  url: Scalars['String'];
+  urlPath: Scalars['String'];
+};
+
+
+export type ListingPageAncestorsArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  limit?: InputMaybe<Scalars['PositiveInt']>;
+  offset?: InputMaybe<Scalars['PositiveInt']>;
+  order?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']>;
+};
+
+
+export type ListingPageChildrenArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  limit?: InputMaybe<Scalars['PositiveInt']>;
+  offset?: InputMaybe<Scalars['PositiveInt']>;
+  order?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']>;
+};
+
+
+export type ListingPageDescendantsArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  limit?: InputMaybe<Scalars['PositiveInt']>;
+  offset?: InputMaybe<Scalars['PositiveInt']>;
+  order?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']>;
+};
+
+
+export type ListingPageNextSiblingsArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  limit?: InputMaybe<Scalars['PositiveInt']>;
+  offset?: InputMaybe<Scalars['PositiveInt']>;
+  order?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']>;
+};
+
+
+export type ListingPagePreviousSiblingsArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  limit?: InputMaybe<Scalars['PositiveInt']>;
+  offset?: InputMaybe<Scalars['PositiveInt']>;
+  order?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']>;
+};
+
+
+export type ListingPageSiblingsArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  limit?: InputMaybe<Scalars['PositiveInt']>;
+  offset?: InputMaybe<Scalars['PositiveInt']>;
+  order?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']>;
+};
+
 /**
  * Base Page type used if one isn't generated for the current model.
  * All other node types extend this.
@@ -469,6 +563,7 @@ export type Page = PageInterface & {
   id?: Maybe<Scalars['ID']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
+  listingpage?: Maybe<ListingPage>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -488,7 +583,7 @@ export type Page = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   urlPath: Scalars['String'];
 };
 
@@ -601,7 +696,7 @@ export type PageInterface = {
   siblings: Array<PageInterface>;
   slug: Scalars['String'];
   title: Scalars['String'];
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   urlPath: Scalars['String'];
 };
 
@@ -812,7 +907,7 @@ export type RichTextBlock = StreamFieldInterface & {
   value: Scalars['String'];
 };
 
-export type Search = DswImage | DswRendition | HomePage | Page | SimplePage;
+export type Search = DswImage | DswRendition | HomePage | ListingPage | Page | SimplePage;
 
 export type SimplePage = PageInterface & {
   __typename?: 'SimplePage';
@@ -832,6 +927,7 @@ export type SimplePage = PageInterface & {
   id?: Maybe<Scalars['ID']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
+  listings?: Maybe<Array<Maybe<PageInterface>>>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -849,7 +945,7 @@ export type SimplePage = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   urlPath: Scalars['String'];
 };
 
@@ -1025,13 +1121,25 @@ export type UrlBlock = StreamFieldInterface & {
   value: Scalars['String'];
 };
 
-type PageFullItem_HomePage_Fragment = { __typename: 'HomePage', title: string } & { ' $fragmentName'?: 'PageFullItem_HomePage_Fragment' };
+type PageFullFieldsFragment_HomePage_Fragment = { __typename: 'HomePage', title: string } & { ' $fragmentName'?: 'PageFullFieldsFragment_HomePage_Fragment' };
 
-type PageFullItem_Page_Fragment = { __typename: 'Page', title: string } & { ' $fragmentName'?: 'PageFullItem_Page_Fragment' };
+type PageFullFieldsFragment_ListingPage_Fragment = (
+  { __typename: 'ListingPage', title: string }
+  & { ' $fragmentRefs'?: { 'ListingPageFragmentFragment': ListingPageFragmentFragment } }
+) & { ' $fragmentName'?: 'PageFullFieldsFragment_ListingPage_Fragment' };
 
-type PageFullItem_SimplePage_Fragment = { __typename: 'SimplePage', title: string, body?: Array<{ __typename: 'BlockQuoteBlock', id?: string | null } | { __typename: 'BooleanBlock', id?: string | null } | { __typename: 'CharBlock', value: string, id?: string | null } | { __typename: 'ChoiceBlock', id?: string | null } | { __typename: 'DateBlock', id?: string | null } | { __typename: 'DateTimeBlock', id?: string | null } | { __typename: 'DecimalBlock', id?: string | null } | { __typename: 'DocumentChooserBlock', id?: string | null } | { __typename: 'EmailBlock', id?: string | null } | { __typename: 'EmbedBlock', id?: string | null } | { __typename: 'FloatBlock', id?: string | null } | { __typename: 'ImageChooserBlock', id?: string | null, image: { __typename?: 'DSWImage', id?: string | null, rendition?: { __typename?: 'DSWRendition', url: string } | null } } | { __typename: 'IntegerBlock', id?: string | null } | { __typename: 'ListBlock', id?: string | null } | { __typename: 'PageChooserBlock', id?: string | null } | { __typename: 'RawHTMLBlock', id?: string | null } | { __typename: 'RegexBlock', id?: string | null } | { __typename: 'RichTextBlock', value: string, id?: string | null } | { __typename: 'StaticBlock', id?: string | null } | { __typename: 'StreamBlock', id?: string | null } | { __typename: 'StreamFieldBlock', id?: string | null } | { __typename: 'StructBlock', id?: string | null } | { __typename: 'TextBlock', id?: string | null } | { __typename: 'TimeBlock', id?: string | null } | { __typename: 'URLBlock', id?: string | null } | null> | null } & { ' $fragmentName'?: 'PageFullItem_SimplePage_Fragment' };
+type PageFullFieldsFragment_Page_Fragment = { __typename: 'Page', title: string } & { ' $fragmentName'?: 'PageFullFieldsFragment_Page_Fragment' };
 
-export type PageFullItemFragment = PageFullItem_HomePage_Fragment | PageFullItem_Page_Fragment | PageFullItem_SimplePage_Fragment;
+type PageFullFieldsFragment_SimplePage_Fragment = (
+  { __typename: 'SimplePage', title: string }
+  & { ' $fragmentRefs'?: { 'SimplePageFragmentFragment': SimplePageFragmentFragment } }
+) & { ' $fragmentName'?: 'PageFullFieldsFragment_SimplePage_Fragment' };
+
+export type PageFullFieldsFragmentFragment = PageFullFieldsFragment_HomePage_Fragment | PageFullFieldsFragment_ListingPage_Fragment | PageFullFieldsFragment_Page_Fragment | PageFullFieldsFragment_SimplePage_Fragment;
+
+export type SimplePageFragmentFragment = { __typename?: 'SimplePage', body?: Array<{ __typename: 'BlockQuoteBlock', id?: string | null } | { __typename: 'BooleanBlock', id?: string | null } | { __typename: 'CharBlock', value: string, id?: string | null } | { __typename: 'ChoiceBlock', id?: string | null } | { __typename: 'DateBlock', id?: string | null } | { __typename: 'DateTimeBlock', id?: string | null } | { __typename: 'DecimalBlock', id?: string | null } | { __typename: 'DocumentChooserBlock', id?: string | null } | { __typename: 'EmailBlock', id?: string | null } | { __typename: 'EmbedBlock', id?: string | null } | { __typename: 'FloatBlock', id?: string | null } | { __typename: 'ImageChooserBlock', id?: string | null, image: { __typename?: 'DSWImage', id?: string | null, rendition?: { __typename?: 'DSWRendition', url: string } | null } } | { __typename: 'IntegerBlock', id?: string | null } | { __typename: 'ListBlock', id?: string | null } | { __typename: 'PageChooserBlock', id?: string | null } | { __typename: 'RawHTMLBlock', id?: string | null } | { __typename: 'RegexBlock', id?: string | null } | { __typename: 'RichTextBlock', value: string, id?: string | null } | { __typename: 'StaticBlock', id?: string | null } | { __typename: 'StreamBlock', id?: string | null } | { __typename: 'StreamFieldBlock', id?: string | null } | { __typename: 'StructBlock', id?: string | null } | { __typename: 'TextBlock', id?: string | null } | { __typename: 'TimeBlock', id?: string | null } | { __typename: 'URLBlock', id?: string | null } | null> | null } & { ' $fragmentName'?: 'SimplePageFragmentFragment' };
+
+export type ListingPageFragmentFragment = { __typename?: 'ListingPage', depth?: number | null, listingpagePages?: Array<{ __typename: 'HomePage', id?: string | null, title: string, url: string } | { __typename: 'ListingPage', id?: string | null, title: string, url: string } | { __typename: 'Page', id?: string | null, title: string, url: string } | { __typename: 'SimplePage', id?: string | null, title: string, url: string } | null> | null } & { ' $fragmentName'?: 'ListingPageFragmentFragment' };
 
 export type GetPageByPathQueryVariables = Exact<{
   sitename: Scalars['String'];
@@ -1042,13 +1150,16 @@ export type GetPageByPathQueryVariables = Exact<{
 
 export type GetPageByPathQuery = { __typename?: 'Query', page?: (
     { __typename?: 'HomePage' }
-    & { ' $fragmentRefs'?: { 'PageFullItem_HomePage_Fragment': PageFullItem_HomePage_Fragment } }
+    & { ' $fragmentRefs'?: { 'PageFullFieldsFragment_HomePage_Fragment': PageFullFieldsFragment_HomePage_Fragment } }
+  ) | (
+    { __typename?: 'ListingPage' }
+    & { ' $fragmentRefs'?: { 'PageFullFieldsFragment_ListingPage_Fragment': PageFullFieldsFragment_ListingPage_Fragment } }
   ) | (
     { __typename?: 'Page' }
-    & { ' $fragmentRefs'?: { 'PageFullItem_Page_Fragment': PageFullItem_Page_Fragment } }
+    & { ' $fragmentRefs'?: { 'PageFullFieldsFragment_Page_Fragment': PageFullFieldsFragment_Page_Fragment } }
   ) | (
     { __typename?: 'SimplePage' }
-    & { ' $fragmentRefs'?: { 'PageFullItem_SimplePage_Fragment': PageFullItem_SimplePage_Fragment } }
+    & { ' $fragmentRefs'?: { 'PageFullFieldsFragment_SimplePage_Fragment': PageFullFieldsFragment_SimplePage_Fragment } }
   ) | null };
 
 export type GetPagesByTypeQueryVariables = Exact<{
@@ -1057,7 +1168,7 @@ export type GetPagesByTypeQueryVariables = Exact<{
 }>;
 
 
-export type GetPagesByTypeQuery = { __typename?: 'Query', pages: Array<{ __typename?: 'HomePage', id?: string | null, title: string, url?: string | null } | { __typename?: 'Page', id?: string | null, title: string, url?: string | null } | { __typename?: 'SimplePage', id?: string | null, title: string, url?: string | null }> };
+export type GetPagesByTypeQuery = { __typename?: 'Query', pages: Array<{ __typename?: 'HomePage', id?: string | null, title: string, url: string } | { __typename?: 'ListingPage', id?: string | null, title: string, url: string } | { __typename?: 'Page', id?: string | null, title: string, url: string } | { __typename?: 'SimplePage', id?: string | null, title: string, url: string }> };
 
 export type GetRenditionQueryVariables = Exact<{
   imageId: Scalars['ID'];
@@ -1072,7 +1183,9 @@ export type GetRenditionQueryVariables = Exact<{
 
 export type GetRenditionQuery = { __typename?: 'Query', image?: { __typename?: 'DSWImage', rendition?: { __typename?: 'DSWRendition', url: string } | null } | null };
 
-export const PageFullItemFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PageFullItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"body"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RichTextBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CharBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ImageChooserBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"StringValue","value":"500x400","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageFullItemFragment, unknown>;
-export const GetPageByPathDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPageByPath"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"path"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sitename"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}}},{"kind":"Argument","name":{"kind":"Name","value":"urlPath"},"value":{"kind":"Variable","name":{"kind":"Name","value":"path"}}},{"kind":"Argument","name":{"kind":"Name","value":"contentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PageFullItem"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PageFullItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"body"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RichTextBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CharBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ImageChooserBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"StringValue","value":"500x400","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetPageByPathQuery, GetPageByPathQueryVariables>;
+export const SimplePageFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SimplePageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"body"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RichTextBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CharBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ImageChooserBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"StringValue","value":"500x400","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<SimplePageFragmentFragment, unknown>;
+export const ListingPageFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingPageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"depth"}},{"kind":"Field","name":{"kind":"Name","value":"listingpagePages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]} as unknown as DocumentNode<ListingPageFragmentFragment, unknown>;
+export const PageFullFieldsFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PageFullFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SimplePageFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingPageFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SimplePageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"body"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RichTextBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CharBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ImageChooserBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"StringValue","value":"500x400","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingPageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"depth"}},{"kind":"Field","name":{"kind":"Name","value":"listingpagePages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]} as unknown as DocumentNode<PageFullFieldsFragmentFragment, unknown>;
+export const GetPageByPathDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPageByPath"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"path"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sitename"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}}},{"kind":"Argument","name":{"kind":"Name","value":"urlPath"},"value":{"kind":"Variable","name":{"kind":"Name","value":"path"}}},{"kind":"Argument","name":{"kind":"Name","value":"contentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PageFullFieldsFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SimplePageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"body"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RichTextBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CharBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ImageChooserBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"StringValue","value":"500x400","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingPageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"depth"}},{"kind":"Field","name":{"kind":"Name","value":"listingpagePages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PageFullFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SimplePageFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingPageFragment"}}]}}]}}]} as unknown as DocumentNode<GetPageByPathQuery, GetPageByPathQueryVariables>;
 export const GetPagesByTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPagesByType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sitename"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}}},{"kind":"Argument","name":{"kind":"Name","value":"contentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]} as unknown as DocumentNode<GetPagesByTypeQuery, GetPagesByTypeQueryVariables>;
 export const GetRenditionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getRendition"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fill"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"min"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"max"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"height"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"width"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"format"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fill"}}},{"kind":"Argument","name":{"kind":"Name","value":"min"},"value":{"kind":"Variable","name":{"kind":"Name","value":"min"}}},{"kind":"Argument","name":{"kind":"Name","value":"max"},"value":{"kind":"Variable","name":{"kind":"Name","value":"max"}}},{"kind":"Argument","name":{"kind":"Name","value":"height"},"value":{"kind":"Variable","name":{"kind":"Name","value":"height"}}},{"kind":"Argument","name":{"kind":"Name","value":"width"},"value":{"kind":"Variable","name":{"kind":"Name","value":"width"}}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"Variable","name":{"kind":"Name","value":"format"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]} as unknown as DocumentNode<GetRenditionQuery, GetRenditionQueryVariables>;

@@ -8,25 +8,34 @@ export interface GraphqlError {
 
 // Page fragment with all fields
 export const PageFullFieldsFragment = graphql(`
-  fragment PageFullItem on PageInterface {
+  fragment PageFullFieldsFragment on PageInterface {
     title
     __typename
     ... on SimplePage {
-      body {
-        id
-        __typename
-        ... on RichTextBlock {
-          value
-        }
-        ... on CharBlock {
-          value
-        }
-        ... on ImageChooserBlock {
-          image {
-            id
-            rendition(fill: "500x400") {
-              url
-            }
+      ...SimplePageFragment
+    }
+    ... on ListingPage {
+      ...ListingPageFragment
+    }
+  }
+`);
+
+export const SimplePageFragment = graphql(`
+  fragment SimplePageFragment on SimplePage {
+    body {
+      id
+      __typename
+      ... on RichTextBlock {
+        value
+      }
+      ... on CharBlock {
+        value
+      }
+      ... on ImageChooserBlock {
+        image {
+          id
+          rendition(fill: "500x400") {
+            url
           }
         }
       }
@@ -34,11 +43,27 @@ export const PageFullFieldsFragment = graphql(`
   }
 `);
 
+export const ListingPageFragment = graphql(`
+  fragment ListingPageFragment on ListingPage {
+    depth
+    listingpagePages {
+      __typename
+      id
+      title
+      url
+    }
+  }
+`);
+
 // Get a page by path variable QueryDocument
 export const PageFullFieldsQD = graphql(`
-  query getPageByPath($sitename: String!, $path: String, $content_type: String) {
+  query getPageByPath(
+    $sitename: String!
+    $path: String
+    $content_type: String
+  ) {
     page(sitename: $sitename, urlPath: $path, contentType: $content_type) {
-      ...PageFullItem
+      ...PageFullFieldsFragment
     }
   }
 `);
@@ -66,7 +91,10 @@ export const PagesBaseFieldsQD = graphql(`
   }
 `);
 
-export function getPagesByType(sitename: string, type: keyof typeof pageTypeMapping) {
+export function getPagesByType(
+  sitename: string,
+  type: keyof typeof pageTypeMapping
+) {
   const typeQuery = pageTypeMapping[type].join(",");
 
   return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PagesBaseFieldsQD, {
@@ -75,7 +103,10 @@ export function getPagesByType(sitename: string, type: keyof typeof pageTypeMapp
   });
 }
 
-export function getPageByType(sitename: string, type: keyof typeof pageTypeMapping) {
+export function getPageByType(
+  sitename: string,
+  type: keyof typeof pageTypeMapping
+) {
   const typeQuery = pageTypeMapping[type].join(",");
 
   return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageFullFieldsQD, {
@@ -118,7 +149,7 @@ export async function getRendition(
     max?: string;
     height?: number;
     width?: number;
-  }, 
+  },
   format?: "jpeg" | "png" | "gif" | "webp"
 ) {
   return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, RenditionQD, {

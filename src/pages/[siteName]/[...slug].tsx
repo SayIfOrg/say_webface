@@ -3,6 +3,7 @@ import { getByPath, PageFullFieldsFragment } from "../../../lib/posts";
 import { Paragraph, Image } from "../../components/basicBlocks";
 import { FragmentType, useFragment } from "../../gql/wagtail/fragment-masking";
 import { SSEComment, WSComment } from "../../components/comment";
+import { ListingPage } from "../../components/ListingPage";
 
 interface Props {
   page: FragmentType<typeof PageFullFieldsFragment>;
@@ -11,7 +12,9 @@ interface Props {
 
 const Page = (props: Props) => {
   const page = useFragment(PageFullFieldsFragment, props.page);
-  if (page.__typename === "SimplePage" && page.body) {
+  if (page.__typename === "ListingPage") {
+    return <ListingPage page={page} siteName={props.siteName}></ListingPage>;
+  } else if (page.__typename === "SimplePage" && page.body) {
     let components = [];
     for (const block of page.body) {
       if (!block?.__typename) {
@@ -37,7 +40,7 @@ const Page = (props: Props) => {
     }
     return (
       <>
-        <div className="grid grid-cols-4 justify-items-center ">
+        <div className="grid grid-cols-4 justify-items-center">
           <div className="col-start-2 col-end-4">
             <p>{props.siteName}</p>
             <div>{components}</div>
