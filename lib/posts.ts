@@ -61,8 +61,14 @@ export const PageFullFieldsQD = graphql(`
     $sitename: String!
     $path: String
     $content_type: String
+    $token: String
   ) {
-    page(sitename: $sitename, urlPath: $path, contentType: $content_type) {
+    page(
+      sitename: $sitename
+      urlPath: $path
+      contentType: $content_type
+      token: $token
+    ) {
       ...PageFullFieldsFragment
     }
   }
@@ -112,6 +118,13 @@ export function getPageByType(
   return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageFullFieldsQD, {
     sitename: sitename,
     content_type: typeQuery,
+  });
+}
+
+export function getPreview(sitename: string, token: string) {
+  return request(env.NEXT_PUBLIC_SAY_WAGTAIL_GQL_URL, PageFullFieldsQD, {
+    sitename: sitename,
+    token: token,
   });
 }
 
