@@ -46,7 +46,7 @@ export const SimplePageFragment = graphql(`
 export const ListingPageFragment = graphql(`
   fragment ListingPageFragment on ListingPage {
     depth
-    listingpagePages {
+    listedPages {
       __typename
       id
       title

@@ -10,7 +10,7 @@ interface Props {
 export const ListingPage = (props: Props) => {
   const page = useFragment(ListingPageFragment, props.page);
 
-  if (!page.listingpagePages) {
+  if (!page.listedPages) {
     return <p>weird</p>;
   }
 
@@ -18,7 +18,7 @@ export const ListingPage = (props: Props) => {
     <>
       <div className="grid grid-cols-4 justify-items-center">
         <div className="col-start-2 col-end-4">
-          {page.listingpagePages.map((lp) =>
+          {page.listedPages.map((lp) =>
             lp ? (
               <Post
                 key={lp.id}

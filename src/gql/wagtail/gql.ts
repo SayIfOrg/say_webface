@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  fragment PageFullFieldsFragment on PageInterface {\n    title\n    __typename\n    ... on SimplePage {\n      ...SimplePageFragment\n    }\n    ... on ListingPage {\n      ...ListingPageFragment\n    }\n  }\n": types.PageFullFieldsFragmentFragmentDoc,
     "\n  fragment SimplePageFragment on SimplePage {\n    body {\n      id\n      __typename\n      ... on RichTextBlock {\n        value\n      }\n      ... on CharBlock {\n        value\n      }\n      ... on ImageChooserBlock {\n        image {\n          id\n          rendition(fill: \"500x400\") {\n            url\n          }\n        }\n      }\n    }\n  }\n": types.SimplePageFragmentFragmentDoc,
-    "\n  fragment ListingPageFragment on ListingPage {\n    depth\n    listingpagePages {\n      __typename\n      id\n      title\n      url\n    }\n  }\n": types.ListingPageFragmentFragmentDoc,
+    "\n  fragment ListingPageFragment on ListingPage {\n    depth\n    listedPages {\n      __typename\n      id\n      title\n      url\n    }\n  }\n": types.ListingPageFragmentFragmentDoc,
     "\n  query getPageByPath(\n    $sitename: String!\n    $path: String\n    $content_type: String\n    $token: String\n  ) {\n    page(\n      sitename: $sitename\n      urlPath: $path\n      contentType: $content_type\n      token: $token\n    ) {\n      ...PageFullFieldsFragment\n    }\n  }\n": types.GetPageByPathDocument,
     "\n  query getPagesByType($sitename: String!, $content_type: String!) {\n    pages(sitename: $sitename, contentType: $content_type) {\n      id\n      title\n      url\n    }\n  }\n": types.GetPagesByTypeDocument,
     "\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n": types.GetRenditionDocument,
@@ -46,7 +46,7 @@ export function graphql(source: "\n  fragment SimplePageFragment on SimplePage {
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment ListingPageFragment on ListingPage {\n    depth\n    listingpagePages {\n      __typename\n      id\n      title\n      url\n    }\n  }\n"): (typeof documents)["\n  fragment ListingPageFragment on ListingPage {\n    depth\n    listingpagePages {\n      __typename\n      id\n      title\n      url\n    }\n  }\n"];
+export function graphql(source: "\n  fragment ListingPageFragment on ListingPage {\n    depth\n    listedPages {\n      __typename\n      id\n      title\n      url\n    }\n  }\n"): (typeof documents)["\n  fragment ListingPageFragment on ListingPage {\n    depth\n    listedPages {\n      __typename\n      id\n      title\n      url\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
