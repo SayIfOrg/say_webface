@@ -4,7 +4,7 @@ FROM node:18-buster-slim
 WORKDIR /project
 
 ## Install the project requirements ##
-COPY package.json package-lock.json .
+COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm install
 
 # Add user that will be used in the container.
