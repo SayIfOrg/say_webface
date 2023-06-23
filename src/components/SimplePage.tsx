@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { SimplePageFragment } from "../../lib/posts";
 import { FragmentType, useFragment } from "../gql/wagtail";
 import { Paragraph, Image } from "./basicBlocks";
-import { SSEComment, WSComment } from "./comment";
+import { Comments, SSEComment, WSComment } from "./comment";
 
 interface Props {
   siteName: string;
@@ -9,6 +10,10 @@ interface Props {
 }
 
 export const SimplePage = (props: Props) => {
+  const [commentFetchingType, setCommentFetchingType] = useState<"sse" | "ws">(
+    "sse"
+  );
+
   const page = useFragment(SimplePageFragment, props.page);
 
   if (!page.body) {
@@ -105,7 +110,11 @@ export const SimplePage = (props: Props) => {
                   Post comment
                 </button>
               </form>
-              <SSEComment />
+
+              <Comments
+                fetchingType={commentFetchingType}
+                setFetchingType={setCommentFetchingType}
+              />
             </section>
           </article>
         </div>
