@@ -1,6 +1,6 @@
 import { type AppType } from "next/dist/shared/lib/utils";
 import { QueryClient, QueryClientProvider } from "react-query";
-
+import "flowbite"
 import "../styles/globals.css";
 
 const queryClient = new QueryClient();
