@@ -19,6 +19,7 @@ const documents = {
     "\n  query getPageByPath(\n    $sitename: String!\n    $path: String\n    $content_type: String\n    $token: String\n  ) {\n    page(\n      sitename: $sitename\n      urlPath: $path\n      contentType: $content_type\n      token: $token\n    ) {\n      ...PageFullFieldsFragment\n    }\n  }\n": types.GetPageByPathDocument,
     "\n  query getPagesByType($sitename: String!, $content_type: String!) {\n    pages(sitename: $sitename, contentType: $content_type) {\n      id\n      title\n      url\n    }\n  }\n": types.GetPagesByTypeDocument,
     "\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n": types.GetRenditionDocument,
+    "\n  query usersByIDs($IDs: [ID]!) {\n    users(id_In: $IDs) {\n      edges {\n        node {\n          id\n          username\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n": types.UsersByIDsDocument,
     "\n  mutation login($username: String!, $password: String!) {\n    tokenAuth(username: $username, password: $password) {\n      refreshExpiresIn\n      token\n      refreshToken\n    }\n  }\n": types.LoginDocument,
     "\n  mutation isTokenValid($token: String!) {\n    verifyToken(token: $token) {\n      payload\n    }\n  }\n": types.IsTokenValidDocument,
     "\n  mutation refreshTheToken($refreshToken: String!) {\n    refreshToken(refreshToken: $refreshToken) {\n      token\n    }\n  }\n": types.RefreshTheTokenDocument,
@@ -62,6 +63,10 @@ export function graphql(source: "\n  query getPagesByType($sitename: String!, $c
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n"): (typeof documents)["\n  query getRendition(\n    $imageId: ID!\n    $fill: String\n    $min: String\n    $max: String\n    $height: Int\n    $width: Int\n    $format: String\n  ) {\n    image(id: $imageId) {\n      rendition(\n        fill: $fill\n        min: $min\n        max: $max\n        height: $height\n        width: $width\n        format: $format\n      ) {\n        url\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query usersByIDs($IDs: [ID]!) {\n    users(id_In: $IDs) {\n      edges {\n        node {\n          id\n          username\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query usersByIDs($IDs: [ID]!) {\n    users(id_In: $IDs) {\n      edges {\n        node {\n          id\n          username\n          firstName\n          lastName\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

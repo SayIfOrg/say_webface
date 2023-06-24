@@ -6,6 +6,7 @@ export const latestComments = `
 	subscription latestComments {
 		latestComment {
 			id
+      userID
 			content
 		}
 	}
@@ -14,6 +15,7 @@ export const CommentsSD = graphql(`
   subscription latestComments {
     latestComment {
       id
+      userID
       content
     }
   }

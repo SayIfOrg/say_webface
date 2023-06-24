@@ -227,6 +227,7 @@ export type DocumentObjectType = {
   site: SiteObjectType;
   tags: Array<TagObjectType>;
   title: Scalars['String'];
+  uploadedByUser?: Maybe<UserType>;
   url: Scalars['String'];
 };
 
@@ -290,8 +291,10 @@ export type HomePage = PageInterface & {
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
+  lockedBy?: Maybe<UserType>;
   nextSiblings: Array<PageInterface>;
   numchild: Scalars['Int'];
+  owner?: Maybe<UserType>;
   pageType?: Maybe<Scalars['String']>;
   parent?: Maybe<PageInterface>;
   path: Scalars['String'];
@@ -304,7 +307,7 @@ export type HomePage = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   urlPath: Scalars['String'];
 };
 
@@ -394,6 +397,7 @@ export type ImageObjectType = {
   srcSet?: Maybe<Scalars['String']>;
   tags: Array<TagObjectType>;
   title: Scalars['String'];
+  uploadedByUser?: Maybe<UserType>;
   url: Scalars['String'];
   width: Scalars['Int'];
 };
@@ -483,8 +487,10 @@ export type ListingPage = PageInterface & {
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
+  lockedBy?: Maybe<UserType>;
   nextSiblings: Array<PageInterface>;
   numchild: Scalars['Int'];
+  owner?: Maybe<UserType>;
   pageType?: Maybe<Scalars['String']>;
   parent?: Maybe<PageInterface>;
   path: Scalars['String'];
@@ -497,7 +503,7 @@ export type ListingPage = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   urlPath: Scalars['String'];
 };
 
@@ -557,10 +563,18 @@ export type ListingPageSiblingsArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  newTempUser: NewTmpUser;
   refreshToken?: Maybe<Refresh>;
   /** Obtain JSON Web Token mutation */
   tokenAuth?: Maybe<ObtainJsonWebToken>;
   verifyToken?: Maybe<Verify>;
+};
+
+
+export type MutationNewTempUserArgs = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  preferredUsername: Scalars['String'];
 };
 
 
@@ -577,6 +591,17 @@ export type MutationTokenAuthArgs = {
 
 export type MutationVerifyTokenArgs = {
   token?: InputMaybe<Scalars['String']>;
+};
+
+export type NewTmpUser = {
+  __typename?: 'NewTmpUser';
+  user?: Maybe<UserType>;
+};
+
+/** An object with an ID */
+export type Node = {
+  /** The ID of the object */
+  id: Scalars['ID'];
 };
 
 /** Obtain JSON Web Token mutation */
@@ -615,8 +640,10 @@ export type Page = PageInterface & {
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
+  lockedBy?: Maybe<UserType>;
   nextSiblings: Array<PageInterface>;
   numchild: Scalars['Int'];
+  owner?: Maybe<UserType>;
   pageType?: Maybe<Scalars['String']>;
   parent?: Maybe<PageInterface>;
   path: Scalars['String'];
@@ -633,7 +660,7 @@ export type Page = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   urlPath: Scalars['String'];
 };
 
@@ -724,6 +751,19 @@ export type PageChooserBlock = StreamFieldInterface & {
   rawValue: Scalars['String'];
 };
 
+/** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  /** When paginating forwards, the cursor to continue. */
+  endCursor?: Maybe<Scalars['String']>;
+  /** When paginating forwards, are there more items? */
+  hasNextPage: Scalars['Boolean'];
+  /** When paginating backwards, are there more items? */
+  hasPreviousPage: Scalars['Boolean'];
+  /** When paginating backwards, the cursor to continue. */
+  startCursor?: Maybe<Scalars['String']>;
+};
+
 export type PageInterface = {
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
@@ -746,7 +786,7 @@ export type PageInterface = {
   siblings: Array<PageInterface>;
   slug: Scalars['String'];
   title: Scalars['String'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   urlPath: Scalars['String'];
 };
 
@@ -816,12 +856,14 @@ export type Query = {
   page?: Maybe<PageInterface>;
   pages: Array<PageInterface>;
   redirects: Array<RedirectType>;
+  retrieveUserByPrivateFragment: UserType;
   search: Array<Search>;
   site?: Maybe<SiteObjectType>;
   sites: Array<SiteObjectType>;
   tag?: Maybe<TagObjectType>;
   tags: Array<TagObjectType>;
-  viewer?: Maybe<Scalars['String']>;
+  users?: Maybe<UserTypeConnection>;
+  userss?: Maybe<Array<Maybe<UserType>>>;
 };
 
 
@@ -890,6 +932,11 @@ export type QueryPagesArgs = {
 };
 
 
+export type QueryRetrieveUserByPrivateFragmentArgs = {
+  theUuid: Scalars['String'];
+};
+
+
 export type QuerySearchArgs = {
   query?: InputMaybe<Scalars['String']>;
 };
@@ -920,6 +967,19 @@ export type QueryTagsArgs = {
   limit?: InputMaybe<Scalars['PositiveInt']>;
   offset?: InputMaybe<Scalars['PositiveInt']>;
   order?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryUsersArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  firstName_Icontains?: InputMaybe<Scalars['String']>;
+  id_In?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  last?: InputMaybe<Scalars['Int']>;
+  lastName_Icontains?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  username?: InputMaybe<Scalars['String']>;
 };
 
 export type RawHtmlBlock = StreamFieldInterface & {
@@ -989,8 +1049,10 @@ export type SimplePage = PageInterface & {
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
+  lockedBy?: Maybe<UserType>;
   nextSiblings: Array<PageInterface>;
   numchild: Scalars['Int'];
+  owner?: Maybe<UserType>;
   pageType?: Maybe<Scalars['String']>;
   parent?: Maybe<PageInterface>;
   path: Scalars['String'];
@@ -1003,7 +1065,7 @@ export type SimplePage = PageInterface & {
   slug: Scalars['String'];
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   urlPath: Scalars['String'];
 };
 
@@ -1179,6 +1241,33 @@ export type UrlBlock = StreamFieldInterface & {
   value: Scalars['String'];
 };
 
+export type UserType = Node & {
+  __typename?: 'UserType';
+  firstName: Scalars['String'];
+  /** The ID of the object */
+  id: Scalars['ID'];
+  lastName: Scalars['String'];
+  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+  username: Scalars['String'];
+};
+
+export type UserTypeConnection = {
+  __typename?: 'UserTypeConnection';
+  /** Contains the nodes in this connection. */
+  edges: Array<Maybe<UserTypeEdge>>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+};
+
+/** A Relay edge containing a `UserType` and its cursor. */
+export type UserTypeEdge = {
+  __typename?: 'UserTypeEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge */
+  node?: Maybe<UserType>;
+};
+
 export type Verify = {
   __typename?: 'Verify';
   payload: Scalars['GenericScalar'];
@@ -1202,7 +1291,7 @@ export type PageFullFieldsFragmentFragment = PageFullFieldsFragment_HomePage_Fra
 
 export type SimplePageFragmentFragment = { __typename?: 'SimplePage', body?: Array<{ __typename: 'BlockQuoteBlock', id?: string | null } | { __typename: 'BooleanBlock', id?: string | null } | { __typename: 'CharBlock', value: string, id?: string | null } | { __typename: 'ChoiceBlock', id?: string | null } | { __typename: 'DateBlock', id?: string | null } | { __typename: 'DateTimeBlock', id?: string | null } | { __typename: 'DecimalBlock', id?: string | null } | { __typename: 'DocumentChooserBlock', id?: string | null } | { __typename: 'EmailBlock', id?: string | null } | { __typename: 'EmbedBlock', id?: string | null } | { __typename: 'FloatBlock', id?: string | null } | { __typename: 'ImageChooserBlock', id?: string | null, image: { __typename?: 'DSWImage', id?: string | null, rendition?: { __typename?: 'DSWRendition', url: string } | null } } | { __typename: 'IntegerBlock', id?: string | null } | { __typename: 'ListBlock', id?: string | null } | { __typename: 'PageChooserBlock', id?: string | null } | { __typename: 'RawHTMLBlock', id?: string | null } | { __typename: 'RegexBlock', id?: string | null } | { __typename: 'RichTextBlock', value: string, id?: string | null } | { __typename: 'StaticBlock', id?: string | null } | { __typename: 'StreamBlock', id?: string | null } | { __typename: 'StreamFieldBlock', id?: string | null } | { __typename: 'StructBlock', id?: string | null } | { __typename: 'TextBlock', id?: string | null } | { __typename: 'TimeBlock', id?: string | null } | { __typename: 'URLBlock', id?: string | null } | null> | null } & { ' $fragmentName'?: 'SimplePageFragmentFragment' };
 
-export type ListingPageFragmentFragment = { __typename?: 'ListingPage', depth?: number | null, listedPages?: Array<{ __typename: 'HomePage', id?: string | null, title: string, url: string } | { __typename: 'ListingPage', id?: string | null, title: string, url: string } | { __typename: 'Page', id?: string | null, title: string, url: string } | { __typename: 'SimplePage', id?: string | null, title: string, url: string } | null> | null } & { ' $fragmentName'?: 'ListingPageFragmentFragment' };
+export type ListingPageFragmentFragment = { __typename?: 'ListingPage', depth?: number | null, listedPages?: Array<{ __typename: 'HomePage', id?: string | null, title: string, url?: string | null } | { __typename: 'ListingPage', id?: string | null, title: string, url?: string | null } | { __typename: 'Page', id?: string | null, title: string, url?: string | null } | { __typename: 'SimplePage', id?: string | null, title: string, url?: string | null } | null> | null } & { ' $fragmentName'?: 'ListingPageFragmentFragment' };
 
 export type GetPageByPathQueryVariables = Exact<{
   sitename: Scalars['String'];
@@ -1232,7 +1321,7 @@ export type GetPagesByTypeQueryVariables = Exact<{
 }>;
 
 
-export type GetPagesByTypeQuery = { __typename?: 'Query', pages: Array<{ __typename?: 'HomePage', id?: string | null, title: string, url: string } | { __typename?: 'ListingPage', id?: string | null, title: string, url: string } | { __typename?: 'Page', id?: string | null, title: string, url: string } | { __typename?: 'SimplePage', id?: string | null, title: string, url: string }> };
+export type GetPagesByTypeQuery = { __typename?: 'Query', pages: Array<{ __typename?: 'HomePage', id?: string | null, title: string, url?: string | null } | { __typename?: 'ListingPage', id?: string | null, title: string, url?: string | null } | { __typename?: 'Page', id?: string | null, title: string, url?: string | null } | { __typename?: 'SimplePage', id?: string | null, title: string, url?: string | null }> };
 
 export type GetRenditionQueryVariables = Exact<{
   imageId: Scalars['ID'];
@@ -1246,6 +1335,13 @@ export type GetRenditionQueryVariables = Exact<{
 
 
 export type GetRenditionQuery = { __typename?: 'Query', image?: { __typename?: 'DSWImage', rendition?: { __typename?: 'DSWRendition', url: string } | null } | null };
+
+export type UsersByIDsQueryVariables = Exact<{
+  IDs: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type UsersByIDsQuery = { __typename?: 'Query', users?: { __typename?: 'UserTypeConnection', edges: Array<{ __typename?: 'UserTypeEdge', node?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null> } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -1275,6 +1371,7 @@ export const PageFullFieldsFragmentFragmentDoc = {"kind":"Document","definitions
 export const GetPageByPathDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPageByPath"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"path"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sitename"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}}},{"kind":"Argument","name":{"kind":"Name","value":"urlPath"},"value":{"kind":"Variable","name":{"kind":"Name","value":"path"}}},{"kind":"Argument","name":{"kind":"Name","value":"contentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}}},{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PageFullFieldsFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SimplePageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"body"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RichTextBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CharBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ImageChooserBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"StringValue","value":"500x400","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingPageFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"depth"}},{"kind":"Field","name":{"kind":"Name","value":"listedPages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PageFullFieldsFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimplePage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SimplePageFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingPage"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingPageFragment"}}]}}]}}]} as unknown as DocumentNode<GetPageByPathQuery, GetPageByPathQueryVariables>;
 export const GetPagesByTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPagesByType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sitename"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sitename"}}},{"kind":"Argument","name":{"kind":"Name","value":"contentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content_type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]} as unknown as DocumentNode<GetPagesByTypeQuery, GetPagesByTypeQueryVariables>;
 export const GetRenditionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getRendition"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fill"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"min"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"max"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"height"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"width"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"format"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rendition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fill"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fill"}}},{"kind":"Argument","name":{"kind":"Name","value":"min"},"value":{"kind":"Variable","name":{"kind":"Name","value":"min"}}},{"kind":"Argument","name":{"kind":"Name","value":"max"},"value":{"kind":"Variable","name":{"kind":"Name","value":"max"}}},{"kind":"Argument","name":{"kind":"Name","value":"height"},"value":{"kind":"Variable","name":{"kind":"Name","value":"height"}}},{"kind":"Argument","name":{"kind":"Name","value":"width"},"value":{"kind":"Variable","name":{"kind":"Name","value":"width"}}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"Variable","name":{"kind":"Name","value":"format"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]} as unknown as DocumentNode<GetRenditionQuery, GetRenditionQueryVariables>;
+export const UsersByIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"usersByIDs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"IDs"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id_In"},"value":{"kind":"Variable","name":{"kind":"Name","value":"IDs"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UsersByIDsQuery, UsersByIDsQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokenAuth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshExpiresIn"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const IsTokenValidDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"isTokenValid"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyToken"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"payload"}}]}}]}}]} as unknown as DocumentNode<IsTokenValidMutation, IsTokenValidMutationVariables>;
 export const RefreshTheTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshTheToken"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"refreshToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"refreshToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"refreshToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<RefreshTheTokenMutation, RefreshTheTokenMutationVariables>;

@@ -62,7 +62,7 @@ export type User = {
 export type LatestCommentsSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LatestCommentsSubscription = { __typename?: 'Subscription', latestComment: { __typename?: 'Comment', id: string, content: string } };
+export type LatestCommentsSubscription = { __typename?: 'Subscription', latestComment: { __typename?: 'Comment', id: string, userID: string, content: string } };
 
 
-export const LatestCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"latestComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<LatestCommentsSubscription, LatestCommentsSubscriptionVariables>;
+export const LatestCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"latestComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userID"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<LatestCommentsSubscription, LatestCommentsSubscriptionVariables>;
