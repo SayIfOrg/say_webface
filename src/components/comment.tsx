@@ -38,6 +38,7 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
       return { ...u, id: getNodeID(u.id) };
     });
 
+    // @ts-expect-error
     setComments((comments) => {
       return comments.map((c) => {
         let correspondingUser = users.find((u) => u?.id === c.userID);
@@ -73,7 +74,7 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
             <p className="mr-3 inline-flex items-center text-sm text-gray-900 dark:text-white">
               <img
                 className="mr-2 h-6 w-6 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                src={comment.user?.profile?.avatar?.rendition?.url}
                 alt={userTitle}
               />
               {userTitle}

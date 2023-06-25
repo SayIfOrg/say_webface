@@ -11,6 +11,13 @@ export const usersByIDsMD = graphql(`
           username
           firstName
           lastName
+          profile {
+            avatar {
+              rendition(max: "50x50") {
+                url
+              }
+            }
+          }
         }
       }
     }
