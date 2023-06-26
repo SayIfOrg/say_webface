@@ -80,8 +80,8 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
               {userTitle}
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <time pubdate="" dateTime="2022-02-08" title="February 8th, 2022">
-                Feb. 8, 2022
+              <time dateTime={new Date(comment.createdAt).toISOString()} title="February 8th, 2022">
+                {new Date(comment.createdAt).toLocaleDateString()} {new Date(comment.createdAt).toLocaleTimeString()}
               </time>
             </p>
           </div>

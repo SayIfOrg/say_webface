@@ -8,6 +8,7 @@ export const latestComments = `
 			id
       userID
 			content
+      createdAt
 		}
 	}
 `;
@@ -17,6 +18,7 @@ export const CommentsSD = graphql(`
       id
       userID
       content
+      createdAt
     }
   }
 `);

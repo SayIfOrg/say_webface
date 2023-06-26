@@ -12,16 +12,19 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Time: any;
 };
 
 export type Comment = {
   __typename?: 'Comment';
   agent: Scalars['String'];
   content: Scalars['String'];
+  createdAt: Scalars['Time'];
   id: Scalars['ID'];
   replies: Array<Maybe<Comment>>;
   replyTo?: Maybe<Comment>;
   replyToID?: Maybe<Scalars['ID']>;
+  updatedAt: Scalars['Time'];
   userID: Scalars['ID'];
 };
 
@@ -62,7 +65,7 @@ export type User = {
 export type LatestCommentsSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LatestCommentsSubscription = { __typename?: 'Subscription', latestComment: { __typename?: 'Comment', id: string, userID: string, content: string } };
+export type LatestCommentsSubscription = { __typename?: 'Subscription', latestComment: { __typename?: 'Comment', id: string, userID: string, content: string, createdAt: any } };
 
 
-export const LatestCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"latestComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userID"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<LatestCommentsSubscription, LatestCommentsSubscriptionVariables>;
+export const LatestCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"latestComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userID"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<LatestCommentsSubscription, LatestCommentsSubscriptionVariables>;
