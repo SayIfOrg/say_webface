@@ -32,9 +32,8 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
   // const handelAllCommentsFetch = (res) => {
 
   // }
-  let {} = useQuery({
+  let { isFetchedAfterMount } = useQuery({
     queryFn: getAllComments,
-    refetchOnWindowFocus: false,
     onSuccess: (res) => {
       let fetchedComments = res.comments.map((c) => {
         return { ...c, user: null };
@@ -43,7 +42,9 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
         handleCommentUser(value)
       );
       setComments((comments) => {
-        return [...fetchedComments, ...comments];
+        return isFetchedAfterMount
+          ? fetchedComments
+          : [...fetchedComments, ...comments];
       });
     },
   });
