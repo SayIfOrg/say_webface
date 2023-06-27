@@ -47,7 +47,7 @@ export type NewComment = {
 
 export type Query = {
   __typename?: 'Query';
-  comments: Array<Maybe<Comment>>;
+  comments: Array<Comment>;
   users: Array<Maybe<User>>;
 };
 
@@ -67,5 +67,11 @@ export type LatestCommentsSubscriptionVariables = Exact<{ [key: string]: never; 
 
 export type LatestCommentsSubscription = { __typename?: 'Subscription', latestComment: { __typename?: 'Comment', id: string, userID: string, content: string, createdAt: any } };
 
+export type AllCommentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllCommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, userID: string, content: string, createdAt: any }> };
+
 
 export const LatestCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"latestComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userID"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<LatestCommentsSubscription, LatestCommentsSubscriptionVariables>;
+export const AllCommentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allComments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userID"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<AllCommentsQuery, AllCommentsQueryVariables>;

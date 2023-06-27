@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import { subscribeWS, subscribeSSE } from "../../lib/clients";
 import { env } from "../env/client.mjs";
 import { LatestCommentsSubscription } from "../gql/keeper/graphql";
-import { latestComments } from "../../lib/keeper/commenting";
+import { getAllComments, latestComments } from "../../lib/keeper/commenting";
 import { initFlowbite } from "flowbite";
 import { UserType, UsersByIDsQuery } from "../gql/wagtail/graphql";
 import { getUsersByID } from "../../lib/wagtail/account";
 import { getNodeID } from "../../lib/utils";
+import { useQuery } from "react-query";
 
 type CommentType = LatestCommentsSubscription["latestComment"] & {
   user: UserType | null;
@@ -28,6 +29,24 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
   );
 
   const [comments, setComments] = useState<CommentType[]>([]);
+  // const handelAllCommentsFetch = (res) => {
+
+  // }
+  let {} = useQuery({
+    queryFn: getAllComments,
+    refetchOnWindowFocus: false,
+    onSuccess: (res) => {
+      let fetchedComments = res.comments.map((c) => {
+        return { ...c, user: null };
+      });
+      getUsersByID(fetchedComments.map((c) => c.userID)).then((value) =>
+        handleCommentUser(value)
+      );
+      setComments((comments) => {
+        return [...fetchedComments, ...comments];
+      });
+    },
+  });
 
   const handleCommentUser = (usersEdgeNode: UsersByIDsQuery) => {
     let dUsers = usersEdgeNode.users
@@ -80,8 +99,12 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
               {userTitle}
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <time dateTime={new Date(comment.createdAt).toISOString()} title="February 8th, 2022">
-                {new Date(comment.createdAt).toLocaleDateString()} {new Date(comment.createdAt).toLocaleTimeString()}
+              <time
+                dateTime={new Date(comment.createdAt).toISOString()}
+                title="February 8th, 2022"
+              >
+                {new Date(comment.createdAt).toLocaleDateString()}{" "}
+                {new Date(comment.createdAt).toLocaleTimeString()}
               </time>
             </p>
           </div>

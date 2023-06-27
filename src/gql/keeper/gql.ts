@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  subscription latestComments {\n    latestComment {\n      id\n      userID\n      content\n      createdAt\n    }\n  }\n": types.LatestCommentsDocument,
+    "\n  query allComments {\n    comments {\n      id\n      userID\n      content\n      createdAt\n    }\n  }\n": types.AllCommentsDocument,
 };
 
 /**
@@ -34,6 +35,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  subscription latestComments {\n    latestComment {\n      id\n      userID\n      content\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  subscription latestComments {\n    latestComment {\n      id\n      userID\n      content\n      createdAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query allComments {\n    comments {\n      id\n      userID\n      content\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query allComments {\n    comments {\n      id\n      userID\n      content\n      createdAt\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
