@@ -87,6 +87,7 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
     const dropdownToggleID = `dropdownComment${String(comment.id)}`;
     const dropdownButtonID = `${dropdownToggleID}Button`;
     let userTitle = `${comment.user?.firstName} ${comment.user?.lastName} (${comment.user?.username})`;
+    let createdAt = new Date(comment.createdAt);
     return (
       <article key={comment.id} className={classNames}>
         <footer className="mb-2 flex items-center justify-between">
@@ -101,11 +102,10 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               <time
-                dateTime={new Date(comment.createdAt).toISOString()}
-                title="February 8th, 2022"
+                dateTime={createdAt.toISOString()}
+                title={createdAt.toLocaleString("default", { day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "numeric" })}
               >
-                {new Date(comment.createdAt).toLocaleDateString()}{" "}
-                {new Date(comment.createdAt).toLocaleTimeString()}
+                {createdAt.toLocaleString()}
               </time>
             </p>
           </div>
