@@ -8,6 +8,14 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  images: {
+    // this glitch is necessary based on the purpose of SayIf
+    remotePatterns: [
+      {
+        hostname: "*",
+      },
+    ],
+  },
   /* If trying out the experimental appDir, comment the i18n config out
    * @see https://github.com/vercel/next.js/issues/41980 */
   i18n: {

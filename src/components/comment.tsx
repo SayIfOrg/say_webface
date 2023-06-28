@@ -10,6 +10,8 @@ import { UserType, UsersByIDsQuery } from "../gql/wagtail/graphql";
 import { getUsersByID } from "../../lib/wagtail/account";
 import { getNodeID } from "../../lib/utils";
 import { useQuery } from "react-query";
+import Image from "next/image";
+import DefaultProfilePic from "../../public/default-profile-pic.png";
 
 type CommentType = LatestCommentsSubscription["latestComment"] & {
   user: UserType | null;
@@ -267,10 +269,15 @@ const CommentComponent = ({
       <footer className="mb-2 flex items-center justify-between">
         <div className="flex items-center">
           <p className="mr-3 inline-flex items-center text-sm text-gray-900 dark:text-white">
-            <img
+            <Image
               className="mr-2 h-6 w-6 rounded-full"
-              src={comment.user?.profile?.avatar?.rendition?.url}
+              src={
+                comment.user?.profile?.avatar?.rendition?.url ||
+                DefaultProfilePic
+              }
               alt={userTitle}
+              width={50}
+              height={50}
             />
             {userTitle}
           </p>
