@@ -58,6 +58,7 @@ export const useComments = () => {
   const [comments, setComments] = useState<CommentType[]>([]);
   let { isLoading, isFetchedAfterMount } = useQuery({
     queryFn: getAllComments,
+    refetchOnWindowFocus: false,
     onSuccess: (res) => {
       let fetchedComments = res.comments.map((c) => {
         return { ...c, user: null };
