@@ -1,5 +1,5 @@
 import { FieldValues, useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { login } from "../../lib/wagtail/auth";
 

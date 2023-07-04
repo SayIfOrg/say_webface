@@ -5,7 +5,7 @@ import { getUsersByID } from "../wagtail/account";
 import { useState } from "react";
 import { LatestCommentsSubscription } from "../../src/gql/keeper/graphql";
 import { UserType, UsersByIDsQuery } from "../../src/gql/wagtail/graphql";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getNodeID } from "../utils";
 
 // Subscribe to the latest comments SubscriptionDocument

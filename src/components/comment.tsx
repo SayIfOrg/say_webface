@@ -223,7 +223,7 @@ const CommentComponent = ({
             />
             {userTitle}
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
             <time
               dateTime={createdAt.toISOString()}
               title={createdAt.toLocaleString("default", {
