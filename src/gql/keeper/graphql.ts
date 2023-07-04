@@ -51,6 +51,12 @@ export type Query = {
   users: Array<Maybe<User>>;
 };
 
+
+export type QueryCommentsArgs = {
+  isRoot?: InputMaybe<Scalars['Boolean']>;
+  replyTo?: InputMaybe<Array<Scalars['ID']>>;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   latestComment: Comment;

@@ -1,21 +1,18 @@
 import { createClient } from "graphql-ws";
 import { createClient as createSSEClient } from "graphql-sse";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { subscribeWS, subscribeSSE } from "../../lib/clients";
 import { env } from "../env/client.mjs";
 import { LatestCommentsSubscription } from "../gql/keeper/graphql";
-import { getAllComments, latestComments } from "../../lib/keeper/commenting";
+import {
+  CommentType,
+  latestComments,
+  useComments,
+} from "../../lib/keeper/commenting";
 import { initFlowbite } from "flowbite";
-import { UserType, UsersByIDsQuery } from "../gql/wagtail/graphql";
-import { getUsersByID } from "../../lib/wagtail/account";
-import { getNodeID } from "../../lib/utils";
-import { useQuery } from "react-query";
 import Image from "next/image";
 import DefaultProfilePic from "../../public/default-profile-pic.png";
 
-type CommentType = LatestCommentsSubscription["latestComment"] & {
-  user: UserType | null;
-};
 type Subscription = {
   data: LatestCommentsSubscription;
 };
@@ -30,51 +27,7 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
     </span>
   );
 
-  const [comments, setComments] = useState<CommentType[]>([]);
-  // const handelAllCommentsFetch = (res) => {
-
-  // }
-  let { isLoading, isFetchedAfterMount } = useQuery({
-    queryFn: getAllComments,
-    onSuccess: (res) => {
-      let fetchedComments = res.comments.map((c) => {
-        return { ...c, user: null };
-      });
-      getUsersByID(fetchedComments.map((c) => c.userID)).then((value) =>
-        handleCommentUser(value)
-      );
-      setComments((comments) => {
-        return isFetchedAfterMount
-          ? fetchedComments
-          : [...fetchedComments, ...comments];
-      });
-    },
-  });
-
-  const handleCommentUser = (usersEdgeNode: UsersByIDsQuery) => {
-    let dUsers = usersEdgeNode.users
-      ? usersEdgeNode.users.edges.map((u) => u?.node)
-      : [];
-    let users = dUsers.map((u) => {
-      if (!u) return null;
-      return { ...u, id: getNodeID(u.id) };
-    });
-
-    // @ts-expect-error
-    setComments((comments) => {
-      return comments.map((c) => {
-        let correspondingUser = users.find((u) => u?.id === c.userID);
-        return correspondingUser ? { ...c, user: correspondingUser } : c;
-      });
-    });
-  };
-
-  function handleNewComment(latestComment: CommentType) {
-    getUsersByID([latestComment.userID]).then((value) =>
-      handleCommentUser(value)
-    );
-    setComments((pervComments) => [...pervComments, latestComment]);
-  }
+  const { comments, handleNewComment, isLoading } = useComments();
   let result;
   if (comments.length === 0 && isLoading) {
     result = (
@@ -115,27 +68,17 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
   );
 
   return fetchingType === "ws" ? (
-    <WSComment
-      comments={comments}
-      handleNewComment={handleNewComment}
-      resultNode={resultNode}
-    />
+    <WSComment handleNewComment={handleNewComment} resultNode={resultNode} />
   ) : (
-    <SSEComment
-      comments={comments}
-      handleNewComment={handleNewComment}
-      resultNode={resultNode}
-    />
+    <SSEComment handleNewComment={handleNewComment} resultNode={resultNode} />
   );
 };
 
 interface CommentMethodProps {
-  comments: CommentType[];
   handleNewComment: (latestComment: CommentType) => void;
   resultNode: React.ReactNode;
 }
 export const WSComment = ({
-  comments,
   handleNewComment,
   resultNode,
 }: CommentMethodProps) => {
@@ -174,7 +117,6 @@ export const WSComment = ({
 };
 
 export const SSEComment = ({
-  comments,
   handleNewComment,
   resultNode,
 }: CommentMethodProps) => {
