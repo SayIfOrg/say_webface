@@ -41,7 +41,7 @@ export const Comments = ({ fetchingType, setFetchingType }: CommentsProps) => {
       let isFirst = i === 0 ? true : false;
       let isLast = i === comments.length ? true : false;
       return (
-        <CommentComponent comment={comment} isLast={isLast} isFirst={isFirst} />
+        <CommentComponent key={i} comment={comment} isLast={isLast} isFirst={isFirst} />
       );
     });
   }
